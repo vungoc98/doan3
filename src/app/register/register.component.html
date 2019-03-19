@@ -1,0 +1,109 @@
+<body style="margin: 50px auto;">
+	<div class="container-fluid">
+	<form class="register" (ngSubmit)="onSubmit(formRegister);" [formGroup]="formRegister">
+		<h2 id="dangky"><b>Tạo tài khoản đăng nhập</b></h2>
+		<br><br>
+		<div>
+			<label>Họ và tên <span class="dau">*</span></label>
+			<div class="input-group">
+		    	<span class="input-group-addon">
+		        	<i class="glyphicon glyphicon-user"></i>
+		    	</span>
+		    <input type="text" class="form-control" formControlName="name">
+		    </div>
+		</div>
+		<br>
+		<div>
+			<label>Tên tài khoản <span class="dau">*</span></label>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="glyphicon glyphicon-user"></i>
+				</span>
+				<input pattern="[a-z A-Z0-9]*" type="text" class="form-control" formControlName="username">
+			</div>
+			<p *ngIf="formRegister.get('username').invalid && formRegister.get('username').dirty" style="color: red;">Tên tài khoản không được chứa ký tự đặc biệt</p>
+		</div>
+		<br>
+		<div>
+			<label>Mật khẩu <span class="dau">*</span></label>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="glyphicon glyphicon-lock"></i>
+				</span>
+				<input pattern="\w*" minlength="6" type="password" class="form-control" formControlName="password">
+			</div>
+			<p *ngIf="formRegister.get('password').invalid && formRegister.get('password').dirty" style="color: red;">Mật khẩu có từ 6 ký tự trở lên</p>
+		</div>
+		<br>
+		<div>
+			<label>Xác nhận mật khẩu <span class="dau">*</span></label>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="glyphicon glyphicon-lock"></i>
+				</span>
+				<input pattern="\w*" minlength="6" type="password" class="form-control" formControlName="password1">
+			</div>
+			<p *ngIf="formRegister.get('password1').invalid && formRegister.get('password1').dirty" style="color: red;">Mật khẩu có từ 6 ký tự trở lên</p>
+		</div>
+		<br>
+		<div>
+			<label>Nhóm người dùng <span class="dau">*</span></label>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="glyphicon glyphicon-user"></i>
+				</span>
+				<select class="form-control" [(ngModel)]="selectedType" [ngModelOptions]="{standalone: true}">
+					<option value="" disabled selected hidden>Chọn nhóm người dùng</option>
+					<option *ngFor="let type of acount_type" value="{{type}}">{{type}}</option> 
+				</select>
+			</div>
+		</div>
+		<br>
+		<div>
+			<label>Địa chỉ <span class="dau">*</span></label>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="glyphicon glyphicon-home"></i>
+				</span>
+				<input type="text" class="form-control" formControlName="address" required="">
+			</div>
+		</div>
+		<br>
+		<div>
+			<label>Số điện thoại <span class="dau">*</span></label>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="glyphicon glyphicon-phone"></i>
+				</span>
+				<input pattern="[0-9]*" minlength="10" type="text" class="form-control" formControlName="mobile">
+			</div>
+			<p *ngIf="formRegister.get('mobile').invalid && formRegister.get('mobile').dirty" style="color: red;">Số điện thoại có từ 10 số trở lên</p>
+		</div>
+		<br>
+		<div>
+			<label>Email <span class="dau">*</span></label>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="glyphicon glyphicon-envelope"></i>
+				</span>
+				<input type="text" class="form-control" formControlName="email">
+			</div>
+			<p *ngIf="formRegister.get('email').invalid && formRegister.get('email').dirty" style="color: red;">Địa chỉ email không phù hợp</p>
+		</div>
+		<br>
+		<div>
+			<label>Upload ảnh <span class="dau">*</span></label>
+			<input type="file" class="btn btn-danger" formControlName="image" accept=".jpg, .png" (change)="changeListner($event)"> 
+		</div>
+		<img class="image">
+		<br><br>
+		<div>
+			<button [disabled]="formRegister.invalid" type="submit" class="btn btn-primary btn-lg btn-block">Đăng ký</button>
+		</div>
+		<br><br>
+		<div class="fillLine" style="text-align: left;"></div>  Bạn đã có tài khoản!  <div class="fillLine" style="text-align: right;"></div>
+		<br><br>
+		<button type="button" class="btn btn-light btn-lg btn-block" routerLink="">Đăng nhập</button>
+	</form>
+</div>
+</body>

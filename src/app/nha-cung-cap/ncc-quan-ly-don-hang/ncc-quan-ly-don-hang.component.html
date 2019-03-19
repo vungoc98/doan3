@@ -1,0 +1,67 @@
+<app-header-npp name="ncc"></app-header-npp>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-sign-in></app-sign-in>
+		<div class="col-sm-10 col-sm-offset-2">
+			<div id="title">
+				<h3>Danh sách đơn hàng</h3>		 
+			</div>
+			<hr> 
+
+			<form (ngSubmit)="onSubmit();" [formGroup]="formSearch">
+				<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
+				<div class="form-group" style="margin-top: 20px;">
+					<div class="row">
+						<div class="col-sm-3">
+							<input type="text" placeholder="Nhập mã đơn hàng..." class="form-control" formControlName="name">
+						</div>
+						 
+						<div class="col-sm-3">
+							<select class="form-control">
+								<option selected="">Chọn trạng thái đơn hàng</option>
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+						</div>
+						 
+					</div> 
+				</div>
+ 				
+ 				<!-- Bang chua danh sach cac don hang cua nha cung cap -->
+				<div class="form-group" style="margin-top: 30px;">
+					<table class="table table-striped">
+						<thead>
+							<th>STT</th>
+							<th>Mã đơn hàng</th>
+							<th>Số lượng</th>
+							<th>Tổng tiền</th>
+							<th>Ngày tạo đơn</th>
+							<th>Ngày xuât hàng</th>
+							<th>Trạng thái</th>
+							<th>Action</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>xyz</td>
+								<td>200</td>
+								<td>10000000</td>
+								<td>22/02/2019</td>
+								<td>24/02/2019</td>
+								<td>
+									<button class="btn btn-danger">Chờ xác nhận</button>
+								</td>
+								<td>
+									<button class="btn btn-primary" routerLink="/nhacungcap/quanlydonhang/xemchitiet/{{1}}">Xem chi tiết</button>
+								</td>
+							</tr> 
+
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

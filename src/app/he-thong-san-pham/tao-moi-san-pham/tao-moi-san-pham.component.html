@@ -1,0 +1,68 @@
+<app-header-npp name="npp"></app-header-npp>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp check="isShow1"></app-npp>
+		<div class="col-sm-10">
+			<div style="margin-top: 40px;">
+				<h3>Tạo hàng hóa</h3>		 
+			</div>
+			<hr style="border: 1px solid gray;">
+			<form (ngSubmit)="onSubmit(formCreateProduct);" [formGroup]="formCreateProduct">
+				<!-- Form chua cac thong tin can dien de tao moi san pham -->
+				<div class="form-group">
+					<label for="exampleInputName">Tên sản phẩm: <span class="dau">*</span></label>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<i class="glyphicon glyphicon-user"></i> 
+						</span>
+						<input type="text" class="form-control" formControlName="name" required="" >
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="exampleInputPrice">Giá sản phẩm(VND): <span class="dau">*</span></label>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<i class="glyphicon glyphicon-qrcode"></i>
+						</span>
+						<input pattern="[0-9]*" type="text" class="form-control" id="exampleInputPrice" formControlName="price" required="">
+					</div>
+					<p *ngIf="formCreateProduct.get('price').invalid && formCreateProduct.get('price').dirty" style="color: red;">Price invalid</p>
+				</div>
+
+				<div class="form-group" style="text-align: left;">
+				    <label for="exampleInputType">Nhóm sản phẩm: <span class="dau">*</span></label>
+				    <div class="input-group">
+				      	<span class="input-group-addon">
+				        	<i class="glyphicon glyphicon-list-alt"></i>
+				      	</span>
+				      	<select class="form-control" id="exampleInputType"  required=""  [(ngModel)]="selectedType" [ngModelOptions]="{standalone: true}">
+							<option value="" disabled selected hidden>Chọn nhóm sản phẩm</option>
+							<option *ngFor="let type of product_type" value="{{type}}">{{type}}</option> 
+						</select> 
+				    </div>
+			  	</div>
+
+				<div class="form-group">
+					<label for="exampleInputImage">Upload ảnh sản phẩm: <span class="dau">*</span></label>
+					<br>
+					<input type="file" class="btn btn-danger" accept=".jpg, .png" (change)="changeListner($event)" style="color: white;" formControlName="image"> 
+					<img class="image">
+				</div>
+
+				<div class="form-group">
+					<label for="exampleInputDescription">Thông tin thêm về hàng hóa: <span class="dau">*</span></label>
+					<div class="input-group">
+						<textarea class="form-control" cols="150" id="exampleInputDescription" formControlName="description" required=""></textarea>
+					</div>
+				</div>
+				 
+				<div>
+					<button [disabled]="formCreateProduct.invalid" type="submit" class=" btn btn-primary" name="taomoi">Tạo mới</button>
+				</div>	
+			</form>
+
+		</div> 
+	</div>
+</div>
+ 

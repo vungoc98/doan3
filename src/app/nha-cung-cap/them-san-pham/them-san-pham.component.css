@@ -1,0 +1,28 @@
+form {
+	border:1px solid gray;
+	padding: 10px; 
+	margin-top: 40px;
+}
+
+hr {
+	border: 1px solid black;
+}
+ 
+
+th, tbody {
+	text-align: center;
+}
+
+td {
+	max-width: 50px;
+}
+
+input {
+	height: 33px; 
+	width: 250px;
+}
+
+h2 {
+	text-align: center;
+	color: red;
+}

@@ -1,0 +1,107 @@
+<!-- <nav class="navbar navbar-inverse navbar-global navbar-fixed-top">
+    <div class="container-fluid" style="color: white; background-color: #53868B;">
+        <div class="navbar-header">
+          	<a class="navbar-brand" routerLink="" (click)="onClick();" style="color: white;">Vegetable Dashboard
+          		<span class="glyphicon glyphicon-align-justify" style="margin-left: 100px;"></span>
+          	</a>
+        </div>
+
+        <div id="navbar" class="collapse navbar-collapse">
+          	<ul class="nav navbar-nav navbar-user navbar-right">
+          		<li class="dropright">
+		      		<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" style="color: white;">Vũ Thị Ngọc
+		      			<span class="caret">
+		      				
+		      			</span>
+		      		</a>
+		      		<ul class="dropdown-menu">
+		      			<a href="" class="list-group-item" style="color: white; background-color: #53868B;"><span class="glyphicon glyphicon-user"></span>Thông tin tài khoản</a>
+			            <a href="#about" class="list-group-item" style="color: white; background-color: #53868B;"><span class="glyphicon glyphiconon-log-out"></span>Logout</a>
+		      			 
+		      		</ul>
+	      		</li>
+          	</ul>
+        </div> 
+      </div>
+</nav>
+<br>
+<br> -->
+
+<!-- Chua menu cua nha phan phoi -->
+<!-- <div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<div class="col-sm-2" style="background-color: #2F4F4F; position: fixed;" id="menu">
+			<ul class="nav nav-tabs nav-stacked" id="menu">
+				
+				<li>
+					<a routerLink="" (click)="onClick();"><span class="glyphicon glyphicon-home" data-parent="#menu" aria-multiselectable="true"></span>&nbsp;&nbsp; Dashboard</a>
+					    
+				</li>
+				 
+				<li>
+					<a href="#demo1" data-toggle="collapse" (click)="onClick1();">
+						<span class="glyphicon glyphicon-list-alt" aria-multiselectable="true"></span>
+						&nbsp;&nbsp; Hệ thống sản phẩm
+						<i class="fa fa-caret-down"></i>
+					</a>
+			        <div class="collapse" id="demo1" *ngIf="isShow1">
+			        	<a class="list-group-item">Tạo mới</a>
+			            <a class="list-group-item">Danh sách</a>
+			            <a class="list-group-item">Hệ thống nhóm sản phẩm</a>
+			        </div>
+				</li>
+		 
+				<li>
+					<a href="#demo2" data-toggle="collapse" (click)="onClick2();">
+						<span class="glyphicon glyphicon-list-alt"></span>
+						&nbsp;&nbsp; Hệ thống kho hàng
+						<i class="fa fa-caret-down"></i>
+					</a>
+			        <div class="collapse" id="demo2" *ngIf="isShow2">
+			        	<a class="list-group-item">Tạo mới</a>
+			            <a class="list-group-item">Danh sách</a>
+			            <a class="list-group-item">Thống kê</a>
+			        </div>
+				</li>
+
+				<li>
+					<a href="#demo3" data-toggle="collapse" (click)="onClick3();">
+						<span class="glyphicon glyphicon-shopping-cart"></span>
+						&nbsp;&nbsp; Quản lý đơn hàng
+						<i class="fa fa-caret-down"></i>
+					</a> 
+					<div class="collapse" id="demo3" *ngIf="isShow3">
+			        	<a class="list-group-item">Đơn nhập hàng</a>
+			            <a class="list-group-item">Đơn đặt hàng</a>
+			        </div>
+				</li>
+
+				<li>
+					<a href="#demo4" data-toggle="collapse" (click)="onClick4();">
+						<span class="glyphicon glyphicon-shopping-cart"></span>
+						&nbsp;&nbsp; Quản lý người dùng
+						<i class="fa fa-caret-down"></i>
+					</a> 
+					<div class="collapse" id="demo4" *ngIf="isShow4">
+			        	<a class="list-group-item">Tạo mới</a>
+			            <a class="list-group-item" >Danh sách nhóm người dùng</a>
+			        </div>
+				</li>
+
+			</ul>
+		</div>
+
+		<div *ngIf="taomoi">
+			<app-he-thong-san-pham></app-he-thong-san-pham>
+		</div>
+			 
+	</div>
+</div> -->
+<app-header-npp name="npp"></app-header-npp>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp></app-npp>
+	</div>
+</div>
+<router-outlet></router-outlet> 

@@ -1,0 +1,130 @@
+<div *ngIf="type_account=='npp'">
+	<app-header-npp name="npp"></app-header-npp>
+</div>
+<div *ngIf="type_account=='ncc'">
+	<app-header-npp name="ncc"></app-header-npp>
+</div>
+<div *ngIf="type_account=='sieuthi'">
+	<app-header-npp name="sieuthi"></app-header-npp>
+</div>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<div *ngIf="type_account=='npp'">
+			<app-npp check="isShow3"></app-npp>
+		</div>
+		<div *ngIf="type_account=='ncc'">
+			<app-sign-in></app-sign-in>
+		</div>
+		<div *ngIf="type_account=='sieuthi'">
+			<app-sieu-thi></app-sieu-thi>
+		</div>
+		<div class="col-sm-10">
+			<div id="title">
+				<h3>Thông tin đơn hàng {{id}}</h3>		 
+			</div>
+			<hr>
+			<div class="col-sm-4">
+				<!-- Form tao moi nhom san pham -->
+				<form>
+					<div>
+						<h4><b>THÔNG TIN ĐƠN HÀNG</b></h4>
+						<hr>
+						<label>Mã đơn: <span>{{order_code}}</span></label> 
+						<br>
+						<br>
+						<label>Tổng số lượng: <span>{{amount_total}}</span></label>
+						<br>
+						<br>
+						<label>Tổng tiền: <span>{{price_total}}</span></label>
+						<br>
+						<br>
+						<label>Ngày tạo đơn: <span>{{order_date}}</span></label>
+						<br>
+						<br>
+						<label>Ngày nhập: <span>{{import_date}}</span></label>
+						<br>
+						<br>
+						<label>Trạng thái: <span>{{status}}</span></label>
+					</div>
+					<br>
+					<div *ngIf="donNhapHang">
+						 <h4><b>THÔNG TIN NHÀ CUNG CẤP</b></h4>
+						<hr>
+						<label>Tên nhà cung cấp: <span>{{name}}</span></label>
+						<br>
+						<br>
+						<label>Mã nhà cung cấp: <span>{{code}}</span></label>
+						<br>
+						<br>
+						<label>Địa chỉ nhà cung cấp: <span>{{address}}</span></label>
+						<br>
+						<br>
+						<label>Số điện thoại nhà cung cấp: <span>{{mobile}}</span></label>
+						<br>
+						<br>
+						<label>Email nhà cung cấp: <span>{{email}}</span></label>
+						<br>
+						<br>
+						<div *ngIf="type_account=='ncc'" style="text-align: center;">
+							<button class="btn btn-primary">Xác nhận đơn hàng</button> <button class="btn btn-danger" style="margin-left: 5%">Hủy đơn hàng</button>
+						</div>
+						 
+					</div>
+					<div *ngIf="donDatHang">
+						 <h4><b>THÔNG TIN SIÊU THỊ</b></h4>
+						<hr>
+						<label>Tên siêu thị: <span>{{name}}</span></label>
+						<br>
+						<br>
+						<label>Mã siêu thị: <span>{{code}}</span></label>
+						<br>
+						<br>
+						<label>Địa chỉ siêu thị: <span>{{address}}</span></label>
+						<br>
+						<br>
+						<label>Số điện thoại siêu thị: <span>{{mobile}}</span></label>
+						<br>
+						<br>
+						<label>Email siêu thị: <span>{{email}}</span></label>
+						<br>
+						<br> 
+					</div>		
+  
+				</form>
+			</div>
+
+			<div class="col-sm-8">
+				<form>
+					<h4><b>DANH SÁCH SẢN PHẨM</b></h4>
+					<br>
+					<table class="table table-striped">
+						<thead>
+							<th>STT</th>
+							<th>Mã sản phẩm</th>
+							<th>Tên sản phẩm</th>
+							<th>Ảnh</th>
+							<th>Số lượng</th>
+							<th>Giá</th>
+							<th>Ngày sản xuất</th>
+							<th>Hạn sử dụng</th> 
+						</thead>
+						<tbody>
+							<tr *ngFor="let product of products; let i = index">
+								<td>{{i + 1}}</td>
+								<td>{{product.code}}</td>
+								<td>{{product.name}}</td>
+								<td><img src="assets/images/{{product.image}}" style="max-height: 50px; max-width: 50px;"></td>
+								<td>{{product.amount}}</td>
+								<td>{{product.price}}</td>
+								<td>{{product.manufacturing_date}}</td>
+								<td>{{product.expiry_date}}</td>
+							</tr>
+						 
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

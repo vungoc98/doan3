@@ -1,0 +1,21 @@
+#menu a:hover {
+	background-color: green;
+}
+
+#menu a {
+	background-color: #2F4F4F;
+	color: white;
+}
+ 
+#menu li {
+	margin-top: 20px;
+}
+
+#menu div {
+	background-color: #2F4F4F;
+}
+
+#menu ul {
+	list-style: none; 
+	min-height: 720px;
+}

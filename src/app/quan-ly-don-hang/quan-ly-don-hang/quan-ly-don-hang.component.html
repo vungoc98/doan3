@@ -1,0 +1,128 @@
+<app-header-npp name="npp"></app-header-npp>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp check="isShow3"></app-npp>
+		<div class="col-sm-10">
+			<div id="title">
+				<h3>Danh sách đơn hàng</h3>		 
+			</div>
+			<hr> 
+			<div>
+			  	<tabset [justified]="true">
+			    	<tab heading="Đơn nhập hàng" (select) ="select('nhaphang');">
+				    	<div class="tab">
+					    	<form [formGroup]="formSearch" (ngSubmit)="searchOrder(formSearch);">
+								<!-- Chua cac thanh tim kiem don hang -->
+								<div class="form-group" style="margin-top: 20px;">
+									<div class="row">
+										<div class="col-sm-3">
+											<input class="search" type="text" placeholder="Nhập mã đơn hàng..." formControlName="code">
+										</div>
+										<div class="col-sm-3">
+											 <input class="search" type="text" placeholder="Nhập tên nhà cung cấp..." formControlName="name"> 
+										</div>
+										<div class="btn-group">
+											<div class="col-sm-3">
+												<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Danh sach san pham hien co trong kho -->
+								<div class="form-group" style="margin-top: 30px;">
+									<table class="table table-striped">
+										<thead>
+											<th>STT</th>
+											<th>Mã đơn hàng</th>
+											<th>Tên nhà cung cấp</th>
+											<th>Tổng số lượng</th>
+											<th>Tổng tiền</th>
+											<th>Ngày tạo đơn</th>
+											<th>Ngày nhập hàng</th> 
+											<th>Action</th>
+										</thead>
+										<tbody>
+											<tr *ngFor="let import of listOrderImport; let i = index">
+												<td>{{i + 1}}</td>
+												<td>{{import.code}}</td>
+												<td>{{import.name}}</td>
+												<td>{{import.amount_total}}</td>
+												<td>{{import.price_total}}</td>
+												<td>{{import.order_date}}</td>
+												<td>{{import.import_date}}</td> 
+												<td>
+													<button routerLink="/quanlydonhang/{{'donnhaphang'}}/xemchitiet/{{import.id}}" class="btn btn-primary">Xem chi tiết</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</form>
+						</div>
+			    	</tab>
+				    <tab heading="Đơn đặt hàng" (select) ="select('dathang');">
+				    	<div class="tab">
+					    	<form [formGroup]="formSearch" (ngSubmit)="searchOrder(formSearch);">
+								<!-- Chua cac thanh tim kiem don hang -->
+								<div class="form-group" style="margin-top: 20px;">
+									<div class="row">
+										<div class="col-sm-3">
+											<input class="search" type="text" placeholder="Nhập mã đơn hàng..." formControlName="code">
+										</div>
+										<div class="col-sm-3">
+											 <input class="search" type="text" placeholder="Nhập tên siêu thị..." formControlName="name"> 
+										</div>
+										<div class="btn-group">
+											<div class="col-sm-3">
+												<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Danh sach san pham hien co trong kho -->
+								<div class="form-group" style="margin-top: 30px;">
+									<table class="table table-striped">
+										<thead>
+											<th>STT</th>
+											<th>Mã đơn hàng</th>
+											<th>Tên siêu thị</th>
+											<th>Số lượng</th>
+											<th>Tổng tiền</th>
+											<th>Ngày tạo đơn</th>
+											<th>Ngày xuất hàng</th>
+											<th>Trạng thái</th>
+											<th>Action</th>
+										</thead>
+										<tbody>
+												<tr *ngFor="let export of listOrderExport; let i = index">
+												<td>{{i + 1}}</td>
+												<td>{{export.code}}</td>
+												<td>{{export.name}}</td>
+												<td>{{export.amount_total}}</td>
+												<td>{{export.price_total}}</td>
+												<td>{{export.order_date}}</td>
+												<td>{{export.export_date}}</td> 
+												<td>
+													<button class="btn btn-danger">{{export.status}}</button>
+												</td>
+												<td *ngIf="xuathang">
+													<button class="btn btn-primary">Xuất hàng</button>
+												</td>
+												<td *ngIf="xemchitiet">
+													<button class="btn btn-primary" routerLink="/quanlydonhang/{{'dondathang'}}/xemchitiet/{{export.id}}">Xem chi tiết</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</form>
+						</div>
+				    </tab>
+			  	</tabset>
+			</div> 
+		</div>
+	</div>
+</div>

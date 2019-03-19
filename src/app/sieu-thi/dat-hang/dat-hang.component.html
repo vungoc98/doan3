@@ -1,0 +1,177 @@
+<app-header-npp name="sieuthi"></app-header-npp>
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-sieu-thi></app-sieu-thi>
+		<div class="col-sm-10 col-sm-offset-2">
+			<div id="title">
+				<h3>Tạo đơn hàng</h3>		 
+			</div>
+			<hr> 
+			<div>
+				<form>
+					<div class="row">
+						<div class="col-sm-5">
+							<h4 style="color: red;"><b>Danh sách hàng hóa</b></h4>
+						</div>
+						<div class="col-sm-3 col-sm-offset-4" style="text-align: right;">
+							<button type="button" class="btn btn-primary" (click)="openModal(template)">Thêm hàng hóa</button> 
+							<ng-template #template>
+							 
+								<div class="modal-header">
+									<h3 class="modal-title pull-left">Danh sách hàng hóa của nhà cung cấp</h3>
+								    <button type="button" class="close pull-right" (click)="modalRef.hide()">
+								    	<span>&times;</span>
+								    </button>
+								</div>
+							  	<div class="modal-body">
+									<form (ngSubmit)="onSubmit();" [formGroup]="formSearch">
+										<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
+										<div class="form-group" style="margin-top: 20px;">
+											<div class="row">
+												<div class="col-sm-3">
+													<input type="text" placeholder="Nhập tên hàng hóa..." formControlName="name" class="form-control">
+												</div>
+												<div class="col-sm-3">
+													<input type="text" placeholder="Nhập mã hàng hóa..." formControlName="code" class="form-control">
+												</div>
+												<div class="col-sm-3">
+													<select class="form-control">
+														<option selected="">Chọn loại hàng hóa</option>
+													</select>
+												</div>
+												<div class="col-sm-3">
+													<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+												</div>
+												 
+											</div> 
+										</div>
+						 				
+						 				<!-- Bang chua danh sach hang hoa da co cua nha cung cap -->
+										<div class="form-group" style="margin-top: 30px;">
+											<table class="table table-striped">
+												<thead>
+													<th>STT</th>
+													<th>Mã sản phẩm</th>
+													<th>Tên sản phẩm</th>
+													<th>Nhóm sản phẩm</th>
+													<th>Mô tả</th>
+													<th>Ảnh</th>
+													<th>Giá</th>
+													<th>Action</th> 
+												</thead>
+												<tbody>
+													<tr>
+														<td>1</td>
+														<td>laa</td>
+														<td>rau muong</td>
+														<td>1</td>
+														<td>Ngon, bổ, rẻ</td>
+														<td>Link ảnh</td>
+														<td>70000</td>
+														<td class="form-check">
+															<input type="checkbox" class="form-check-input">
+														</td>
+													</tr> 
+												</tbody>
+											</table> 
+										</div>
+									</form>
+									<!-- <div class="form-check" *ngFor="let s of subjects">
+										<input type="checkbox" class="form-check-input" [(ngModel)]="s.checked"  name="radios" mdbInput value="ncc2" >
+										<label class="form-check-label">{{s.id}}</label>
+									</div> -->
+							  	</div>
+							  	 
+							  	<div class="modal-footer">
+							  		<button class="btn btn-primary" (click)="insertProduct();">Lưu</button>
+							  		<button class="btn btn-default" (click)="checkbox();">Close</button>  		 
+							  	</div>
+							 
+							</ng-template>
+						</div>
+					</div>
+ 					<hr style="border: 1px solid gray;">
+
+ 					<table class="table table-striped">
+						<thead>
+							<th>STT</th>
+							<th>Mã sản phẩm</th>
+							<th>Tên sản phẩm</th>
+							<th>Mô tả</th>
+							<th>Ảnh</th>
+							<th>Số lượng</th>
+							<th>Giá</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>bacda</td>
+								<td>Kho tổng</td>
+								<td>Rất ngon</td>
+								<td>Hà Nội</td>
+								<td>
+									<input type="text" name="">
+								</td>
+								<td>
+									 <input type="text" name="">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Tổng số lượng:</label>
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="glyphicon glyphicon-usd"></i>
+									</span>
+									<input disabled="" class="form-control" type="text" name="">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Tổng tiền:</label>
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="glyphicon glyphicon-usd"></i>
+									</span>
+									<input disabled="" class="form-control" type="text" name="">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Ngày tạo đơn:</label>
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="glyphicon glyphicon-time"></i>
+									</span>
+									<input type="text" name="" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Ngày dự kiến giao hàng:</label>
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="glyphicon glyphicon-time"></i>
+									</span>
+									<input type="text" name="" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }">
+								</div>
+							</div>
+						</div>
+					</div>
+					<br><br>
+					<button (click)="taoDonHang();" class="btn btn-primary">Tạo đơn hàng</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

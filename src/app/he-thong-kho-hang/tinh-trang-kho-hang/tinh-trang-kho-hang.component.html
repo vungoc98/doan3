@@ -1,0 +1,89 @@
+<app-header-npp name="npp"></app-header-npp>
+ 
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp check="isShow2"></app-npp>
+		<div class="col-sm-10 col-sm-offset-2">
+			<div id="title">
+				<h3>Thông tin chi tiết kho hàng {{id}}</h3>		 
+			</div>
+			<hr> 
+			<app-menu-chi-tiet-kho-hang></app-menu-chi-tiet-kho-hang>
+			<div>
+				<h2><b>Tình trạng kho hàng</b></h2>
+				<form (ngSubmit)="onSubmit();" [formGroup]="formSearch">
+					<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
+					<div class="form-group" style="margin-top: 20px;">
+						<div class="row">
+							<div class="col-sm-3">
+								<input class="form-control" type="text" placeholder="Nhập tên hàng hóa..." formControlName="name">	
+							</div>
+							<div class="col-sm-3">
+								<input class="form-control" type="text" placeholder="Nhập mã hàng hóa..." formControlName="code">
+							</div>
+							<div class="btn-group">
+								<div class="col-sm-3">
+									<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Danh sach san pham hien co trong kho -->
+					<div class="form-group" style="margin-top: 30px;">
+						<table class="table table-striped">
+							<thead>
+								<th>STT</th>
+								<th>Mã sản phẩm</th>
+								<th>Tên sản phẩm</th>
+								<th>Số lượng</th>
+								<th>Ngày sản xuất</th>
+								<th>Hạn sử dụng</th>
+								<th>Action</th>
+							</thead>
+							<tbody>
+								<tr>
+									<td>1</td>
+									<td>abanan</td>
+									<td>Rau cai</td>
+									<td>1000</td>
+									<td>22-02-2019</td>
+									<td>30-02-2019</td>
+									<td>
+										<button type="button" class="btn btn-primary" (click)="openModal(template)">Create template modal</button>
+ 
+										<ng-template #template>
+										  <div class="modal-header">
+										    <h4 class="modal-title pull-left">Modal</h4>
+										    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+										      <span aria-hidden="true">&times;</span>
+										    </button>
+										  </div>
+										  <div class="modal-body">
+										    This is a modal.
+										  </div>
+										</ng-template>
+										<!-- <a routerLink="/hethongkhohang/danhsachkhohang/chitietkhohang/{{id}}/tinhtrangkhohang/{{'ngoclan'}}" class="btn btn-primary">Chuyển kho</a> -->
+									</td>
+								</tr>
+								<!-- {% for row in form %}
+									{% if not forloop.last %}
+										<tr>
+											<td>{{forloop.counter}}</td>
+											<td>{{row.code}}</td>
+											<td>{{row.name}}</td>
+											<td>{{row.amount}}</td>
+											<td>{{row.manufacturing_date}}</td>
+											<td>{{row.expiry_date}}</td>
+											<td><input type="submit" class=" btn btn-primary" name="chuyenkho" value="Chuyển kho" formaction="{% url 'chuyen_kho' row.id row.code %}"></input></td>
+										</tr>
+									{% endif %}
+								{% endfor %} -->
+							</tbody>
+						</table>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

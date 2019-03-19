@@ -1,0 +1,139 @@
+<div *ngIf="npp">
+	<app-header-npp name="npp"></app-header-npp>
+</div>
+<div *ngIf="ncc">
+	<app-header-npp name="ncc"></app-header-npp>
+</div>
+<div *ngIf="sieuthi">
+	<app-header-npp name="sieuthi"></app-header-npp>
+</div>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<div *ngIf="npp">
+			<app-npp></app-npp>
+		</div>
+		<div *ngIf="ncc">
+			<app-sign-in></app-sign-in>
+		</div>
+		<div *ngIf="sieuthi">
+			<app-sieu-thi></app-sieu-thi>
+		</div>
+		<div class="col-sm-10">
+			<div id="title">
+				<h3>Thông tin tài khoản</h3>		 
+			</div>
+			<hr> 
+			<div>
+			  	<tabset [justified]="true">
+			    	<tab heading="Thông tin cá nhân">
+				    	<div class="tab">
+				    		<form [formGroup]="formUpdateAcount" (ngSubmit)="updateAcount(formUpdateAcount);">
+				    			<div class="form-group">
+									<label >Tên tài khoản:<span class="dau">*</span></label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-user"></i> 
+										</span>
+										<input type="text" class="form-control" disabled=""  formControlName="username">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label >Họ và tên:<span class="dau">*</span></label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-user"></i> 
+										</span>
+										<input type="text" class="form-control" required=""  formControlName="name">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label>Địa chỉ:<span class="dau">*</span></label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-home"></i>
+										</span>
+										<input type="text" class="form-control" name="" formControlName="address">
+									</div>
+								</div>
+			
+								<div class="form-group">
+									<label>Số điện thoại:<span class="dau">*</span></label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-phone"></i>
+										</span>
+										<input minlength="10" pattern="[0-9]*" type="text" class="form-control" name="" formControlName="mobile"> 
+									</div>
+									<p *ngIf="formUpdateAcount.get('mobile').invalid && formUpdateAcount.get('mobile').dirty" style="color: red;">Phone number invalid</p>
+								</div>
+									 
+								<div class="form-group">
+									<label>Email:<span class="dau">*</span></label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-envelope"></i>
+										</span>
+										<input type="text" class="form-control" name="" formControlName="email"> 
+									</div>
+									<p *ngIf="formUpdateAcount.get('email').invalid && formUpdateAcount.get('email').dirty" style="color: red;">Email invalid</p>
+								</div>
+
+								<div class="modal-footer">
+									<button type="submit" class="btn btn-primary" [disabled]="formUpdateAcount.invalid">Cập nhật</button>
+							    </div>
+ 
+							</form>
+						<!-- 	<code>{{ formUpdateAcount.controls.email.errors | json }}</code> -->
+						</div>
+			    	</tab>
+				    <tab heading="Đổi mật khẩu">
+				    	<div class="tab">
+				    		<form [formGroup]="formChangePassword" (ngSubmit)="changePassword(formChangePassword);">
+								<div class="form-group">
+									<label >Nhập mật khẩu cũ:<span class="dau">*</span></label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-lock"></i> 
+										</span>
+										<input pattern="\w*" minlength="6" type="password" class="form-control" required="" formControlName="oldPassword" required="">
+									</div>
+									<!-- <p *ngIf="formChangePassword.get('oldPassword').invalid && formChangePassword.get('oldPassword').touched" style="color: red;">Password invalid</p> -->
+								</div>
+									 
+								<div class="form-group">
+									<label>Nhập mật khẩu mới:<span class="dau">*</span></label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-lock"></i>
+										</span>
+										<input pattern="\w*" minlength="6" type="password" class="form-control" formControlName="newPassword" required="">
+									</div>
+									<!-- <p *ngIf="formChangePassword.get('newPassword').invalid && formChangePassword.get('newPassword').touched" style="color: red;">Password invalid</p> -->
+								</div>
+							 
+								<div class="form-group">
+									<label>Nhập lại mật khẩu mới:<span class="dau">*</span></label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-lock"></i>
+										</span>
+										<input pattern="\w*" minlength="6" type="password" class="form-control" formControlName="againPassword" required="">
+									</div>
+									<!-- <p *ngIf="formChangePassword.get('againPassword').invalid && formChangePassword.get('againPassword').touched" style="color: red;">Password invalid</p> -->
+								</div>
+								
+								<div class="modal-footer">
+									<button [disabled]="formChangePassword.invalid" type="submit" class="btn btn-primary">Thay đổi</button>
+							    </div>
+
+							</form>	
+						</div>
+				    </tab>
+			  	</tabset>
+			</div> 
+		</div>
+	</div>
+</div>

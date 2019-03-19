@@ -1,0 +1,17 @@
+#title {
+	margin-top: 40px;
+}
+
+hr {
+	border: 1px solid gray;
+}
+
+form {
+	border:1px solid gray; 
+	padding: 10px; 
+	margin-top: 40px;
+}
+
+.dau {
+	color: red;
+}

@@ -1,0 +1,25 @@
+body {
+	width: 430px;
+	height: 550px;
+	border: 1px solid;
+	margin: 10px;
+
+}
+.login {
+	margin: 10px;
+}
+#dangnhap {
+	text-align: center;
+}
+.login .dau {
+	color: red;
+}
+/*#haha:before {
+	content: "Bạn chưa có tài khoản";
+	display: inline;
+}*/
+.fillLine {
+	display: inline-block;
+	width: 110px;
+	border-bottom: 1px solid black;
+}

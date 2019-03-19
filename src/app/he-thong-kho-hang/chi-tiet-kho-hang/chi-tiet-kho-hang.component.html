@@ -1,0 +1,282 @@
+<app-header-npp name="npp"></app-header-npp>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp check="isShow2"></app-npp>
+		<div class="col-sm-10">
+			<div id="title">
+				<h3>Thông tin chi tiết kho hàng {{id}}</h3>		 
+			</div>
+			<hr> 
+			<div>
+			  <tabset [justified]="true">
+			    <tab heading="Thông tin cơ bản" id="tab1">
+			    	<div class="tab">
+						<form (ngSubmit)="onSubmitUpdate(formUpdateContainer);" [formGroup]="formUpdateContainer">
+							<div class="form-group">
+								<label for="exampleInputName">Tên kho hàng: <span class="dau">*</span></label>
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="glyphicon glyphicon-user"></i> 
+									</span>
+									<input type="text" class="form-control" disabled="" formControlName="name">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputCode">Mã kho hàng: <span class="dau">*</span></label>
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="glyphicon glyphicon-qrcode"></i>
+									</span>
+									<input type="text" class="form-control" disabled="" formControlName="code">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputAddress">Địa chỉ: <span class="dau">*</span></label>
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="glyphicon glyphicon-home"></i>
+									</span>
+									<input type="text" class="form-control" required="" formControlName="address">
+								</div>
+							</div>
+
+							<div class="form-group" style="text-align: left;">
+							    <label for="exampleInputPhone">Số điện thoại: <span class="dau">*</span></label>
+							    <div class="input-group">
+							      	<span class="input-group-addon">
+							        	<i class="glyphicon glyphicon-phone"></i>
+							      	</span>
+							      	<input minlength="10" pattern="[0-9]*" type="text" class="form-control" required="" formControlName="mobile">
+							    </div>
+							      <p *ngIf="formUpdateContainer.get('mobile').invalid && formUpdateContainer.get('mobile').dirty" style="color: red;">Phone number invalid</p>
+						  	</div>
+									 
+							<div>
+								<button [disabled]="formUpdateContainer.invalid" type="submit" class=" btn btn-primary" name="taomoi">Cập nhật</button>
+							</div>	
+						</form>	  
+					</div>
+			    </tab>
+			    <tab heading="Tình trạng kho hàng">
+			    	<div class="tab">
+				    	<form (ngSubmit)="onSubmitTinhTrangKhoHang(formSearchProduct);" [formGroup]="formSearchProduct">
+							<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
+							<div class="form-group" style="margin-top: 20px;">
+								<div class="row">
+									<div class="col-sm-3">
+										<input class="form-control" type="text" placeholder="Nhập tên hàng hóa..." formControlName="name">	
+									</div>
+									<div class="col-sm-3">
+										<input class="form-control" type="text" placeholder="Nhập mã hàng hóa..." formControlName="code">
+									</div>
+									<div class="btn-group">
+										<div class="col-sm-3">
+											<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Danh sach san pham hien co trong kho -->
+							<div class="form-group" style="margin-top: 30px;">
+								<table class="table table-striped">
+									<thead>
+										<th>STT</th>
+										<th>Mã sản phẩm</th>
+										<th>Tên sản phẩm</th>
+										<th>Số lượng</th>
+										<th>Ngày sản xuất</th>
+										<th>Hạn sử dụng</th>
+										<th>Action</th>
+									</thead>
+									<tbody>
+										<tr *ngFor="let status of statusContainer; let i = index">
+											<td>{{i + 1}}</td>
+											<td>{{status.code}}</td>
+											<td>{{status.name}}</td>
+											<td>{{status.amount}}</td>
+											<td>{{status.manufacturing_date}}</td>
+											<td>{{status.expiry_date}}</td>
+											<td>
+												<button type="button" class="btn btn-primary" (click)="openModal(template, status.code)">Chuyển kho</button> 
+												<ng-template #template>
+													<div class="modal-header">
+														<h3 class="modal-title pull-left">Thông tin lưu chuyển hàng hóa</h3>
+													    <button type="button" class="close pull-right" (click)="modalRef.hide()">
+													    	<span>&times;</span>
+													    </button>
+													</div>
+												  	<div class="modal-body">
+													    <form [formGroup]="formMoveProduct" (ngSubmit)="moveProduct(formMoveProduct);">
+													    	<div class="form-group">
+																<label>Mã sản phẩm: <span class="dau">*</span></label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-qrcode"></i>
+																	</span>
+																	<input type="text" class="form-control" disabled="" formControlName="code">
+																</div>
+															</div>
+ 
+															<div class="form-group">
+																<label>Tên sản phẩm: <span class="dau">*</span></label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-user"></i>
+																	</span>
+																	<input type="text" class="form-control" disabled="" formControlName="name">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label for="exampleInputAmount">Số lượng: <span class="dau">*</span></label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-home"></i>
+																	</span>
+																	<input pattern="[0-9]*" type="text" class="form-control" required="" formControlName="amount">
+																</div>
+																<p *ngIf="formMoveProduct.get('amount').invalid && formMoveProduct.get('amount').dirty" style="color: red;">Amount invalid</p>
+															</div> 
+
+															<div class="form-group" style="text-align: left;">
+															    <label for="exampleInputManu">Ngày sản xuất: <span class="dau">*</span></label>
+															    <div class="input-group">
+															      	<span class="input-group-addon">
+															        	<i class="glyphicon glyphicon-list-alt"></i>
+															      	</span>
+															      	<input type="text" class="form-control" required="" formControlName="manufacturing_date" disabled="">
+															    </div>
+														  	</div>
+
+														  	<div class="form-group" style="text-align: left;">
+															    <label for="exampleInputEx">Hạn sử dụng: <span class="dau">*</span></label>
+															    <div class="input-group">
+															      	<span class="input-group-addon">
+															        	<i class="glyphicon glyphicon-list-alt"></i>
+															      	</span>
+															      	<input type="text" class="form-control"  disabled="" formControlName="expiry_date">
+															    </div>
+														  	</div>
+														
+															<div class="form-group">
+																<label for="exampleInputFrom">Kho nguồn: <span class="dau">*</span></label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-home"></i>
+																	</span>
+																	<input type="text" class="form-control" disabled="" formControlName="container_from">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label for="exampleInputTo">Chọn kho đích: <span class="dau">*</span></label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-user"></i> 
+																	</span> 
+																	<select class="form-control" id="exampleInputType"  required=""  [(ngModel)]="container_to" [ngModelOptions]="{standalone: true}">
+																		<option value="" disabled selected hidden>Chọn kho đích</option>
+																		<option *ngFor="let container of container_des" value="{{container}}">{{container}}</option> 
+																	</select>
+																</div>
+															</div>
+															<div class="modal-footer">
+																<div class="row">
+																	<div class="col-sm-3 col-sm-offset-7">
+																		<button [disabled]="" type="submit" class="btn btn-primary">Cập nhật</button>
+																	</div>
+																	<div>
+																		<button type="button" class="btn btn-default" (click)="modalRef.hide()">Close</button>
+																	</div>
+																</div>
+														    </div>
+														</form>
+												  	</div>
+												</ng-template>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</form>
+					</div>
+			    </tab>
+			    <tab heading="Lịch sử kho hàng">
+			    	<div class="tab">
+			    		<form (ngSubmit)="onSubmitLichSuKhoHang(formSearchProduct);" [formGroup]="formSearchProduct">
+						<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
+						<div class="form-group" style="margin-top: 20px;">
+							<div class="row">
+								<div class="col-sm-3">
+									<input class="form-control" type="text" placeholder="Nhập tên hàng hóa..." formControlName="name">
+								</div>
+								<div class="col-sm-3">
+									<input class="form-control" type="text" placeholder="Nhập mã hàng hóa..." formControlName="code">
+								</div>
+								<div class="btn-group">
+									<div class="col-sm-3">
+										<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+									</div>
+								</div>
+							</div> 
+						</div>
+
+						<!-- Hien thi bang chua thong tin lich su luu chuyen san pham cua kho hang -->
+						<div class="form-group" style="margin-top: 30px;">
+							<table class="table table-striped">
+								<thead>
+									<th>STT</th>
+									<th>Mã sản phẩm</th>
+									<th>Tên sản phẩm</th>
+									<th>Kho nguồn</th>
+									<th>Kho đích</th>
+									<th>Số lượng</th>
+									<th>Ngày sản xuất</th>
+									<th>Hạn sử dụng</th>
+								</thead>
+								<tbody>
+									<tr *ngFor="let container of containers; let i = index">
+										<td>{{i + 1}}</td>
+										<td>{{container.code}}</td>
+										<td>{{container.name}}</td>
+										<td>{{container.container_from}}</td>
+										<td>{{container.container_to}}</td>
+										<td>{{container.amount}}</td>
+										<td>{{container.manufacturing_date}}</td>
+										<td>{{container.expiry_date}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</form>
+			    	</div>
+			    </tab>
+			    <tab heading="Thống kê kho hàng" (select)="thongKeKhoHang();">
+			    	<div class="form-group" style="margin-top: 30px;">
+						<table class="table table-striped">
+							<thead>
+								<th>Số lượng chuyển đến kho</th>
+								<th>Số lượng chuyển cho đơn hàng</th>
+								<th>Số lượng chuyển kho</th>
+								<th>Số lượng còn lại trong kho</th>
+							</thead>
+							<tbody>
+								<tr> 
+									<td>{{amount_from}}</td>
+									<td>{{amount_order}}</td>
+									<td>{{amount_to}}</td>
+									<td>{{amount_rest}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+			    </tab>
+			  </tabset>
+			</div> 
+		</div>
+	</div>
+</div>

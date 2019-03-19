@@ -1,0 +1,35 @@
+<app-header-npp name="npp"></app-header-npp>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp check="isShow1"></app-npp>
+		<div class="col-sm-10">
+			<div id="title">
+				<h3>Cập nhật nhóm hàng hóa</h3>		 
+			</div>
+			<hr>
+			<!-- Tao form chua thong tin cua nhom hang hoa -->
+			<form (ngSubmit)="onSubmit(formUpdateGroupProduct);" [formGroup]="formUpdateGroupProduct">
+			    <div class="form-group">
+			      <label for="exampleInputName">Tên nhóm hàng hóa: <span class="dau">*</span></label>
+			      <div class="input-group">
+			        <span class="input-group-addon">
+			          <i class="glyphicon glyphicon-user"></i>   
+			        </span>
+			        <input type="text" class="form-control" formControlName="name" disabled="">
+			      </div>
+			    </div>
+
+			    <div class="form-group">
+			      <label for="exampleInputDescription">Mô tả: <span class="dau">*</span></label>
+			      <div class="input-group">
+			        <textarea class="form-control" cols="150" formControlName="description"></textarea>
+			      </div>
+			    </div>  
+
+			    <input type="submit" class=" btn btn-primary" name="luu" value="Lưu">
+ 
+			</form>
+		</div>
+	</div>
+ </div>

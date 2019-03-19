@@ -1,0 +1,30 @@
+#title {
+	margin-top: 40px;
+}
+
+hr {
+	border: 1px solid gray;
+}
+
+form {
+	border:1px solid gray; 
+	padding: 10px;
+}
+
+.dau {
+	color: red;
+}
+
+th, tbody {
+	text-align: center;
+}
+table tbody { 
+	display:block; 
+	max-height:450px; 
+	overflow-y:scroll; 
+}
+table thead, table tbody tr { 
+	display:table; 
+	width:100%; 
+	table-layout:fixed; 
+} 

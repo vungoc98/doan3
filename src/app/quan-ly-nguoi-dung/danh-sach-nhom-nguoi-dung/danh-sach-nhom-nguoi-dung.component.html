@@ -1,0 +1,428 @@
+<app-header-npp name="npp"></app-header-npp>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp check="isShow4"></app-npp>
+		<div class="col-sm-10">
+			<div id="title">
+				<h3>Danh sách người dùng</h3>		 
+			</div>
+			<hr> 
+			<div>
+			  	<tabset [justified]="true">
+			    	<tab heading="Nhà phân phối" (select) ="select('nhaphanphoi');">
+				    	<div class="tab">
+					    	<form [formGroup]="formSearch" (ngSubmit)="searchUser(formSearch);">
+								<!-- Chua cac thanh tim kiem don hang -->
+								<div class="form-group" style="margin-top: 20px;">
+									<div class="row">
+										<div class="col-sm-3">
+											<input class="form-control" type="text" placeholder="Nhập tên nhân viên..." formControlName="name">	
+										</div>
+										<div class="col-sm-3">
+											<input class="form-control" type="text" placeholder="Nhập mã code nhân viên..." formControlName="code">	
+										</div> 
+										<div class="col-sm-3">
+											<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+										</div> 
+										<div class="col-sm-3" style="text-align: right;"> 
+											<button type="button" class="btn btn-primary" (click)="openModal(template)">Thêm mới</button> 
+											<ng-template #template>
+												<div class="modal-header">
+													<h3 class="modal-title pull-left">Thông tin của nhân viên</h3>
+												    <button type="button" class="close pull-right" (click)="modalRef.hide()">
+												    	<span>&times;</span>
+												    </button>
+												</div>
+											  	<div class="modal-body">
+												    <form  [formGroup] = "formAddDistributor" (ngSubmit)="addDistributor();">
+														<div class="form-group">
+															<label for="exampleInputName">Họ và tên: <span class="dau">*</span></label>
+															<div class="input-group">
+																<span class="input-group-addon">
+																	<i class="glyphicon glyphicon-user"></i>
+																</span>
+																<input type="text" class="form-control" required="" formControlName="name">
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label for="exampleInputAmount">Tên tài khoản: <span class="dau">*</span></label>
+															<div class="input-group">
+																<span class="input-group-addon">
+																	<i class="glyphicon glyphicon-user"></i>
+																</span>
+																<input pattern="[a-z A-Z0-9]*" type="text" class="form-control" required="" formControlName="username">
+															</div>
+															<p *ngIf="formAddDistributor.get('username').invalid && formAddDistributor.get('username').dirty" style="color: red;">Tên tài khoản không được chứa ký tự đặc biệt</p>
+														</div>
+
+
+														<div class="form-group">
+														    <label for="exampleInputManu">Mật khẩu: <span class="dau">*</span></label>
+														    <div class="input-group">
+														      	<span class="input-group-addon">
+														        	<i class="glyphicon glyphicon-lock"></i>
+														      	</span>
+														      	<input pattern="\w*" minlength="6" type="password" class="form-control" required="" formControlName="password">
+														    </div>
+														     <p *ngIf="formAddDistributor.get('password').invalid && formAddDistributor.get('password').dirty" style="color: red;">Mật khẩu có từ 6 ký tự trở lên</p>
+													  	</div>
+
+													  	<div class="form-group">
+														    <label for="exampleInputEx">Xác nhận mật khẩu: <span class="dau">*</span></label>
+														    <div class="input-group">
+														      	<span class="input-group-addon">
+														        	<i class="glyphicon glyphicon-lock"></i>
+														      	</span>
+														      	<input pattern="\w*" minlength="6" type="password" class="form-control" required="" formControlName="password1">
+														    </div>
+														    <p *ngIf="formAddDistributor.get('password1').invalid && formAddDistributor.get('password1').dirty" style="color: red;">Mật khẩu có từ 6 ký tự trở lên</p>
+													  	</div>
+													
+														<div class="form-group">
+															<label for="exampleInputFrom">Địa chỉ: <span class="dau">*</span></label>
+															<div class="input-group">
+																<span class="input-group-addon">
+																	<i class="glyphicon glyphicon-home"></i>
+																</span>
+																<input type="text" class="form-control" required="" formControlName="address">
+															</div>
+														</div>
+
+														 <div class="form-group">
+															<label for="exampleInputFrom">Số điện thoại: <span class="dau">*</span></label>
+															<div class="input-group">
+																<span class="input-group-addon">
+																	<i class="glyphicon glyphicon-earphone"></i>
+																</span>
+																<input pattern="[0-9]*" minlength="10" type="text" class="form-control" required="" formControlName="mobile">
+															</div>
+															<p *ngIf="formAddDistributor.get('mobile').invalid && formAddDistributor.get('mobile').dirty" style="color: red;">Số điện thoại có từ 10 số trở lên</p>
+														</div>
+														<div class="form-group">
+															<label for="exampleInputFrom">Địa chỉ email: <span class="dau">*</span></label>
+															<div class="input-group">
+																<span class="input-group-addon">
+																	<i class="glyphicon glyphicon-envelope"></i>
+																</span>
+																<input type="text" class="form-control" required="" formControlName="email">
+															</div>
+															<p *ngIf="formAddDistributor.get('email').invalid && formAddDistributor.get('email').dirty" style="color: red;">Địa chỉ email không phù hợp</p>
+														</div>
+														<div >
+															<label>Upload ảnh sản phẩm: <span class="dau">*</span></label>
+															<br>
+															<input type="file" class="btn btn-danger" formControlName="image" accept=".jpg, .png" (change)="changeListener($event)" style="color: white;"> 
+															<img class="image" src="{{srcImage}}">
+														</div> 
+														<div class="modal-footer">
+															<button [disabled]="formAddDistributor.invalid" type="submit" class="btn btn-primary btn-lg btn-block">Tạo mới</button>
+													    </div>
+													   <!--  <div >
+															<label>Upload ảnh sản phẩm: <span class="dau">*</span></label>
+															<br>
+															<input type="file" class="btn btn-danger" formControlName="image" accept=".jpg, .png" (change)="changeListener($event)" style="color: white;"> 
+															<img class="image">
+														</div>  -->
+													</form>
+											  	</div>
+											</ng-template>
+
+										</div>
+									</div>
+								</div>
+
+								<!-- Danh sach nhan vien cua nha phan phoi -->
+								<div class=".table-responsive" style="margin-top: 30px;">
+									<table class="table table-striped">
+										<thead>
+											<th>STT</th>
+											<th>Mã nhân viên</th>
+											<th>Tên nhân viên</th>
+											<th>Địa chỉ</th>
+											<th>Email</th>
+											<th>Số điện thoại</th>
+											<th>Ảnh</th> 
+										</thead>
+										<tbody>
+											<tr *ngFor="let dis of users; let i = index">
+												<td>{{i + 1}}</td>
+												<td>{{dis.code}}</td>
+												<td>{{dis.name}}</td>
+												<td>{{dis.address}}</td>
+												<td>{{dis.email}}</td>
+												<td>{{dis.mobile}}</td>
+												<td><img src="../assets/images/{{dis.image}}" style="max-height: 50px; max-width: 50px;"></td>
+												<!-- <td>
+													<button type="button" class="btn btn-primary" (click)="openModal1(template1)">Xem chi tiết</button> 
+													<ng-template #template1>
+														<div class="modal-header">
+															<h3 class="modal-title pull-left">Thông tin nhà phân phối</h3>
+														    <button type="button" class="close pull-right" (click)="modalRef.hide()">
+														    	<span>&times;</span>
+														    </button>
+														</div>
+													  	<div class="modal-body">
+													  		 <div class="form-group">
+																<label>Họ và tên:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-user"></i> 
+																	</span>
+																	<input type="text" class="form-control" required="">
+																</div>
+															</div>
+															<div class="form-group">
+																<label>Địa chỉ:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-home"></i>
+																	</span>
+																	<input type="text" class="form-control" name="">
+																</div>
+															</div>
+										
+															<div class="form-group">
+																<label>Số điện thoại:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-phone"></i>
+																	</span>
+																	<input type="text" class="form-control" name="">
+																</div>
+															</div>
+																 
+															<div class="form-group">
+																<label>Email:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-envelope"></i>
+																	</span>
+																	<input type="text" class="form-control" name="">
+																</div>
+															</div>
+													  	</div>
+													  	<div class="modal-footer">
+													  		<button class="btn btn-default" (click)="choosed();">Close</button> 
+													  	</div>
+													</ng-template>
+													  
+												</td> -->
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</form>
+						</div>
+			    	</tab>
+				    <tab heading="Nhà cung cấp" (select)="select('nhacungcap');">
+				    	<div class="tab">
+					    	<form [formGroup]="formSearch" (ngSubmit)="searchUser(formSearch);">
+								<!-- Chua cac thanh tim kiem don hang -->
+								<div class="form-group" style="margin-top: 20px;">
+									<div class="row">
+										<div class="col-sm-3">
+											<input class="form-control" type="text" placeholder="Nhập tên nhà cung cấp..." formControlName="name">	
+										</div>
+										<div class="col-sm-3">
+											<input class="form-control" type="text" placeholder="Nhập mã code nhà cung cấp..." formControlName="code">	
+										</div>
+										<div class="btn-group">
+											<div class="col-sm-3">
+												<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Danh sach san pham hien co trong kho -->
+								<div class="form-group" style="margin-top: 30px;">
+									<table class="table table-striped">
+										<thead>
+											<th>STT</th>
+											<th>Mã nhà cung cấp</th>
+											<th>Tên nhà cung cấp</th>
+											<th>Địa chỉ</th>
+											<th>Email</th>
+											<th>Số điện thoại</th>
+											<th>Ảnh</th> 
+										</thead>
+										<tbody>
+											<tr *ngFor="let pro of users; let i = index">
+												<td>{{i + 1}}</td>
+												<td>{{pro.code}}</td>
+												<td>{{pro.name}}</td>
+												<td>{{pro.address}}</td>
+												<td>{{pro.email}}</td>
+												<td>{{pro.mobile}}</td>
+												<td><img src="../assets/images/{{pro.image}}" style="max-height: 50px; max-width: 50px;"></td>
+												<!-- <td>
+													<button type="button" class="btn btn-primary" (click)="openModal1(template2)">Xem chi tiết</button> 
+													<ng-template #template2>
+														<div class="modal-header">
+															<h3 class="modal-title pull-left">Thông tin nhà cung cấp</h3>
+														    <button type="button" class="close pull-right" (click)="modalRef.hide()">
+														    	<span>&times;</span>
+														    </button>
+														</div>
+													  	<div class="modal-body">
+													  		 <div class="form-group">
+																<label>Họ và tên:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-user"></i> 
+																	</span>
+																	<input type="text" class="form-control" required="">
+																</div>
+															</div>
+															<div class="form-group">
+																<label>Địa chỉ nhà cung cấp:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-home"></i>
+																	</span>
+																	<input type="text" class="form-control" name="">
+																</div>
+															</div>
+										
+															<div class="form-group">
+																<label>Số điện thoại nhà cung cấp:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-phone"></i>
+																	</span>
+																	<input type="text" class="form-control" name="">
+																</div>
+															</div>
+																 
+															<div class="form-group">
+																<label>Email nhà cung cấp:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-envelope"></i>
+																	</span>
+																	<input type="text" class="form-control" name="">
+																</div>
+															</div>
+													  	</div>
+													  	<div class="modal-footer">
+													  		<button class="btn btn-default" (click)="choosed();">Close</button> 	 
+													  	</div>
+													</ng-template>
+												</td> -->
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</form>
+						</div>
+				    </tab>
+				     <tab heading="Siêu thị" (select)="select('sieuthi');">
+				    	<div class="tab">
+					    	<form [formGroup]="formSearch" (ngSubmit)="searchUser(formSearch);">
+								<!-- Chua cac thanh tim kiem don hang -->
+								<div class="form-group" style="margin-top: 20px;">
+									<div class="row">
+										<div class="col-sm-3">
+											<input class="form-control" type="text" placeholder="Nhập tên siêu thị..." formControlName="name">	
+										</div>
+										<div class="col-sm-3">
+											<input class="form-control" type="text" placeholder="Nhập mã code siêu thị..." formControlName="code">	
+										</div>
+										<div class="btn-group">
+											<div class="col-sm-3">
+												<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Danh sach san pham hien co trong kho -->
+								<div class="form-group" style="margin-top: 30px;">
+									<table class="table table-striped">
+										<thead>
+											<th>STT</th>
+											<th>Mã siêu thị</th>
+											<th>Tên siêu thị</th>
+											<th>Địa chỉ</th>
+											<th>Email</th>
+											<th>Số điện thoại</th>
+											<th>Ảnh</th> 
+										</thead>
+										<tbody>
+										<tr *ngFor="let sup of users; let i = index">
+												<td>{{i + 1}}</td>
+												<td>{{sup.code}}</td>
+												<td>{{sup.name}}</td>
+												<td>{{sup.address}}</td>
+												<td>{{sup.email}}</td>
+												<td>{{sup.mobile}}</td>
+												<td><img src="../assets/images/{{sup.image}}" style="max-height: 50px; max-width: 50px;"></td>
+												<!-- <td>
+													<button type="button" class="btn btn-primary" (click)="openModal1(template3)">Xem chi tiết</button> 
+													<ng-template #template3>
+														<div class="modal-header">
+															<h3 class="modal-title pull-left">Thông tin siêu thị</h3>
+														    <button type="button" class="close pull-right" (click)="modalRef.hide()">
+														    	<span>&times;</span>
+														    </button>
+														</div>
+													  	<div class="modal-body">
+													  		 <div class="form-group">
+																<label>Tên siêu thị:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-user"></i> 
+																	</span>
+																	<input type="text" class="form-control" required="">
+																</div>
+															</div>
+															<div class="form-group">
+																<label>Địa chỉ siêu thị:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-home"></i>
+																	</span>
+																	<input type="text" class="form-control" name="">
+																</div>
+															</div>
+										
+															<div class="form-group">
+																<label>Số điện thoại:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-phone"></i>
+																	</span>
+																	<input type="text" class="form-control" name="">
+																</div>
+															</div>
+																 
+															<div class="form-group">
+																<label>Email:</label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="glyphicon glyphicon-envelope"></i>
+																	</span>
+																	<input type="text" class="form-control" name="">
+																</div>
+															</div>
+													  	</div>
+													  	<div class="modal-footer">
+													  		<button class="btn btn-default" (click)="choosed();">Close</button>
+													  		 
+													  	</div>
+													</ng-template>
+												</td> -->
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</form>
+						</div>
+				    </tab>
+			  	</tabset>
+			</div> 
+		</div>
+	</div>
+</div>
