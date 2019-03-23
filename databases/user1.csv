@@ -1,0 +1,4 @@
+"id";"username";"password";"name";"address";"email";"mobile";"code";"image";"status";"acount_type";"dele";"create_date";"update_date"
+1;"vu thi ngoc";"123456";"Vũ Thị Ngọc";"Tổ 10 - p.Đồng Mai - q.Hà Đông - tp.Hà Nội";"thingocvu98@gmail.com";"0364406565";"hdgna3";"ngoc1.png";0;"Nhà phân phối";0;"2018-01-01";"2018-02-20"
+2;"minhanh";"123456";"Nguyễn Minh Anh";"Hà Nội";"anhnm@gmail.com";"0907970987";"hali8h";"anh.png";0;"Siêu thị";0;"2018-02-10";"2018-02-20"
+3;"duonghoang";"abcdefgh";"Nguyễn Hoàng Dương";"Hải Phòng";"duong@gmail.com";"0909090909";"klao67";"duong.png";0;"Nhà cung cấp";0;"2018-02-10";"2018-02-20"
