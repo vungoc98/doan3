@@ -35,9 +35,12 @@ export class DanhSachHangHoaComponent implements OnInit {
   		for (var i = 0; i < resJson.length; i++) {
   			this.products[i] = new Product(resJson[i].id, resJson[i].code, resJson[i].name, 
   				resJson[i].price, resJson[i].description,
-				"assets/images/" + resJson[i].image, resJson[i].product_category_id);
+				"assets/images/" + resJson[i].image, resJson[i].product_category_id, resJson[i].create_date,
+        resJson[i].update_date);
+         
   		}
-  	}) 
+
+  	})  ;
       // Lay thong tin nhom san pham
     url = "http://localhost:3000/getProduct_Type";
     
@@ -69,7 +72,7 @@ export class DanhSachHangHoaComponent implements OnInit {
 
           this.products[i] = new Product(resJson[i].id, resJson[i].code, resJson[i].name, 
             resJson[i].price, resJson[i].description,
-          "assets/images/" + resJson[i].image, resJson[i].product_category_id);
+          "assets/images/" + resJson[i].image, resJson[i].product_category_id, resJson[i].create_date, resJson[i].update_date);
            console.log(this.products[i]);
         } 
     })

@@ -35,8 +35,10 @@
 							<th>Mã kho hàng</th>
 							<th>Tên kho hàng</th>
 							<th>Địa chỉ</th>
-							<th>Số điện thoại</th>
+							<th>Số điện thoại</th> 
 							<th>Trạng thái</th>
+							<th>Ngày tạo</th>
+							<th>Ngày cập nhật</th>
 							<th>Action</th>
 						</thead>
 						<tbody>
@@ -47,6 +49,8 @@
 								<td>{{container.address}}</td>
 								<td>{{container.mobile}}</td>
 								<td>{{container.dele}}</td>
+								<td>{{container.create_date}}</td>
+								<td>{{container.update_date}}</td>
 								<td>
 									<a routerLink="/hethongkhohang/danhsachkhohang/chitietkhohang/{{container.id}}" class="btn btn-primary">Chi tiết kho hàng</a>
 								</td>

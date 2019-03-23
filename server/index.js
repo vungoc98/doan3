@@ -52,9 +52,11 @@ app.post('/login', jsonParser, (req, res) => {
 
 // Cap nhat thong tin tai khoan
 app.post('/updateAcount', jsonParser, (req, res) => {
+	// ngay hien tai => tuong duong voi ngay cap nhat thong tin
+	var update_date = (new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + ((new Date()).getDate());
 	var message; // thong bao ket qua cap nhat
-	var sql = "update user1 set name = ?, address = ?, email = ?, mobile = ? where username = ?";
-	sql = mysql.format(sql, [req.body.name, req.body.address, req.body.email, req.body.mobile, req.body.username]);
+	var sql = "update user1 set name = ?, address = ?, email = ?, mobile = ?, update_date = ? where username = ?";
+	sql = mysql.format(sql, [req.body.name, req.body.address, req.body.email, req.body.mobile, update_date, req.body.username]);
 	console.log(sql);
 	con.query(sql, function(err, results) {
 		if (err) {
@@ -69,9 +71,10 @@ app.post('/updateAcount', jsonParser, (req, res) => {
 
 // Thay doi mat khau tai khoan
 app.post('/changePassword', jsonParser, (req, res) => {
-	var message; // Thong bao ket qua thay doi
-	var sql = "update user1 set password = ? where username = ?"; 
-	sql = mysql.format(sql, [req.body.newPassword, req.body.username]);
+	// ngay hien tai => tuong duong voi ngay cap nhat thong tin
+	var update_date =(new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + ((new Date()).getDate());
+	var sql = "update user1 set password = ?, update_date = ? where username = ?"; 
+	sql = mysql.format(sql, [req.body.newPassword, update_date, req.body.usernam]);
 	con.query(sql, function(err, results) {
 		if (err) {
 			message = "Error";
@@ -102,7 +105,7 @@ app.post('/register', jsonParser, (req, res) => {
 	con.query(sql, function(err, results) {
 		if (err) throw err;
 
-		// Trung ten tai khoan
+		// Trung ten tai khoan => thong bao loi
 		if (results.length != 0) {
 			this.login = new Login(check = 0);
 			res.send(this.login);
@@ -110,14 +113,16 @@ app.post('/register', jsonParser, (req, res) => {
 
 		// Chen vao co so du lieu
 		else {
+			// ngay hien tai => tuong duong voi ngay tao thong tin
+			var create_date= (new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + ((new Date()).getDate());
 			// sinh ma code ngau nhien cho nguoi dung
 			var rdmCode = "";
 		    for( ; rdmCode.length < 6; rdmCode  += Math.random().toString(36).substr(2));
 		    var code = rdmCode.substr(0, 6);
 			console.log(code);
 
-			sql = "insert into user1(username, password, name, address, email, mobile, acount_type, image, dele, status, code) value(?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?)";
-			sql = mysql.format(sql, [req.body.username, req.body.password, req.body.name, req.body.address, req.body.email, req.body.mobile, req.body.acount_type, req.body.image, 0, 0, code]);
+			sql = "insert into user1(username, password, name, address, email, mobile, acount_type, image, dele, status, code, create_date) value(?, ?, ?, ? , ?, ?, ?, ?, ?, ?, ?, ?)";
+			sql = mysql.format(sql, [req.body.username, req.body.password, req.body.name, req.body.address, req.body.email, req.body.mobile, req.body.acount_type, req.body.image, 0, 0, code, create_date]);
 			
 			con.query(sql, function(err, results) {
 				if (err) throw err;
@@ -183,6 +188,8 @@ class Login {
 
 // Tao moi san pham
 app.post('/createProduct', jsonParser, (req, res) => {
+	// ngay hien tai => tuong duong voi ngay tao thong tin
+	var create_date= (new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + ((new Date()).getDate());
 	var product_category_id;
 	// Tim product_category_id 
 	var sql = "select id from product_category where name = ?";
@@ -200,8 +207,8 @@ app.post('/createProduct', jsonParser, (req, res) => {
 	    for( ; rdmCode.length < 6; rdmCode  += Math.random().toString(36).substr(2));
 	    var code = "PRODUCT_" + rdmCode.substr(0, 6);
 
-		var sql = "insert into product(code, name, price, description, image, dele, product_category_id) values(?, ?, ?, ?, ?, ?, ?)";
-		sql = mysql.format(sql, [code, req.body.name, req.body.price, req.body.description, req.body.image, 0, product_category_id]);
+		var sql = "insert into product(code, name, price, description, image, dele, product_category_id, create_date) values(?, ?, ?, ?, ?, ?, ?, ?)";
+		sql = mysql.format(sql, [code, req.body.name, req.body.price, req.body.description, req.body.image, 0, product_category_id, create_date]);
 		console.log("Tao: " + sql);
 		con.query(sql, function(err, results) {
 			if (err) {
@@ -220,15 +227,15 @@ let product = require('./product.js'); // Lop Product
 products = new Array(); // Mang chua cac san pham
 app.get('/getMenuProduct', (req, res) => {
 	products.splice(0, products.length);
-	var sql = "select id, code, name, price, description, image, product_category_id from product";
+	var sql = "select id, code, name, price, description, image, product_category_id, date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date from product";
 	con.query(sql, function(err, results) {
 		//console.log("r: " + results);
 		if (err) throw err;
 		for(var i = 0; i < results.length; i++) {
 			products[i] = new product(results[i].id, results[i].code, results[i].name, results[i].price, results[i].description,
-				results[i].image, results[i].product_category_id);
+				results[i].image, results[i].product_category_id, results[i].create_date, results[i].update_date);
 			//console.log(products);
-		}
+		}  
 		res.send(products);
 	})
 })
@@ -240,37 +247,54 @@ app.post('/searchProduct', jsonParser, (req, res) => {
 	var sql;
 	// tim kiem chi theo ten san pham
 	if (req.body.name !="" && req.body.code == "" && req.body.product_category_name == "") {
-		sql = "select product.id, code, product.name, price, product.description, image, product_category_id from product where name like ?";
-		sql = mysql.format(sql, req.body.name);
+		sql = `select product.id, code, product.name, price, product.description, image, product_category_id, 
+		date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date 
+		from product where name like ?`;
+		sql = mysql.format(sql, "%" + req.body.name + "%");
 	}
 	else if (req.body.name =="" && req.body.code != "" && req.body.product_category_name == "") {
-		sql = "select product.id, code, product.name, price, product.description, image, product_category_id from product where code like ?";
-		sql = mysql.format(sql, req.body.code);
+		sql = `select product.id, code, product.name, price, product.description, image, product_category_id, 
+		date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date 
+		from product where code like ?`;
+		sql = mysql.format(sql, "%" + req.body.code + "%");
 	}
 	else if (req.body.name =="" && req.body.code == "" && req.body.product_category_name != "") {
-		sql = "select product.id, code, product.name, price, product.description, image, product_category_id from product, product_category where product_category_id = product_category.id and product_category.name = ?";
+		sql = `select product.id, code, product.name, price, product.description, image, product_category_id, 
+		 date_format(create_date, '%d-%m-%Y') as create_date, date_formate(update_date, '%d-%m-%Y') as update_date 
+		 from product, product_category where product_category_id = product_category.id and product_category.name = ?`;
 		sql = mysql.format(sql, req.body.product_category_name);
 	}
 	// tim kiem theo 2 thu
 	else if (req.body.name !="" && req.body.code != "" && req.body.product_category_name == "") {
-		sql = "select product.id, code, product.name, price, product.description, image, product_category_id from product where name = ? and code = ?";
+		sql = `select product.id, code, product.name, price, product.description, image, product_category_id, 
+		 date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date 
+		 from product where name = ? and code = ?`;
 		sql = mysql.format(sql, [req.body.name, req.body.code]);
 	}
 	else if (req.body.name !="" && req.body.code == "" && req.body.product_category_name != "") {
-		sql = "select product.id, code, product.name, price, product.description, image, product_category_id from product, product_category where product_category_id = product_category.id and product.name like ? and product_category.name = ?";
-		sql = mysql.format(sql, [req.body.name, req.body.product_category_name]);
+		sql = `select product.id, code, product.name, price, product.description, image, product_category_id, 
+		 date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date 
+		 from product, product_category where product_category_id = product_category.id and product.name like ? and product_category.name = ?`;
+		sql = mysql.format(sql, ["%" + req.body.name + "%", req.body.product_category_name]);
 	}
 	else if (req.body.name =="" && req.body.code != "" && req.body.product_category_name != "") {
-		sql = "select product.id, code, product.name, price, product.description, image, product_category_id from product, product_category where product_category_id = product_category.id and code like ? and product_category.name = ?";
-		sql = mysql.format(sql, [req.body.code, req.body.product_category_name]);
+		sql = `select product.id, code, product.name, price, product.description, image, product_category_id, 
+		 date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date	
+		 from product, product_category where product_category_id = product_category.id and code like ? and product_category.name = ?`;
+		sql = mysql.format(sql, ["%" + req.body.code + "%", req.body.product_category_name]);
 	}
 	// ca 3 thu deu rong => hien thi tat ca danh sach
 	else if (req.body.name =="" && req.body.code == "" && req.body.product_category_name == ""){
-		sql = "select product.id, code, product.name, price, product.description, image, product_category_id from product";
+		sql = `select product.id, code, product.name, price, product.description, image, product_category_id, 
+		 date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date
+		 from product`;
 	}
 	// tim kiem theo ca 3 thu
 	else {
-		sql = "select product.id, code, product.name, price, product.description, image, product_category_id from product, product_category where product_category_id = product_category.id and product.name = ? and code = ? and product_category.name = ?";
+		sql = `select product.id, code, product.name, price, product.description, image, product_category_id, 
+		 date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date
+		 from product, product_category 
+		 where product_category_id = product_category.id and product.name = ? and code = ? and product_category.name = ?`;
 		sql = mysql.format(sql, [req.body.name, req.body.code, req.body.product_category_name]);
 	}
 	// console.log(sql);
@@ -279,8 +303,7 @@ app.post('/searchProduct', jsonParser, (req, res) => {
 		if (err) throw err;
 		for(var i = 0; i < results.length; i++) {
 			products[i] = new product(results[i].id, results[i].code, results[i].name, results[i].price, results[i].description,
-				results[i].image, results[i].product_category_id);
-			// console.log(products[i]);
+				results[i].image, results[i].product_category_id, results[i].create_date, results[i].update_date); 
 		}
 		res.send(products);
 	})
@@ -289,9 +312,9 @@ app.post('/searchProduct', jsonParser, (req, res) => {
 
 // 1.4. Cap nhat thong tin san pham
 // Lay thong tin san pham can cap nhat
-app.post('/getProductInfo', jsonParser, (req, res) => {
-	console.log(req.body.id);
-	var sql = `select product.name, price, image, product.description, product_category.name as product_type from product, product_category where product.id = ?
+app.post('/getProductInfo', jsonParser, (req, res) => {  
+	var sql = `select product.name, price, image, product.description, product_category.name as product_type 
+	from product, product_category where product.id = ?
 		and product_category_id = product_category.id`;
 	sql = mysql.format(sql, req.body.id);
 	console.log(sql);
@@ -314,11 +337,13 @@ app.post('/updateProduct', jsonParser, (req, res) => {
 			res.send("0");
 			throw err;
 		}
-		product_category_id = results[0].id;
-		console.log("id: " + product_category_id);
+
+		product_category_id = results[0].id; 
+		// ngay hien tai => tuong duong voi ngay cap nhat thong tin
+		var update_date = (new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + ((new Date()).getDate());
 		 
-		var sql = "update product set name = ?, price = ?, description = ?, image = ?, product_category_id = ? where id = ?";
-		sql = mysql.format(sql, [req.body.name, req.body.price, req.body.description, req.body.image, product_category_id, req.body.id]);
+		var sql = "update product set name = ?, price = ?, description = ?, image = ?, product_category_id = ?, update_date = ? where id = ?";
+		sql = mysql.format(sql, [req.body.name, req.body.price, req.body.description, req.body.image, product_category_id, update_date, req.body.id]);
 	 	console.log(sql);
 		con.query(sql, function(err, results) {
 			if (err) {
@@ -336,11 +361,12 @@ let product_category = require('./product_category.js'); // Lop Product
 product_categorys = new Array(); // Mang chua cac san pham
 app.get('/getMenuProduct_Category', (req, res) => { 
 	product_categorys.splice(0, products.length);
-	var sql = "select id, name, description from product_category";
+	var sql = `select id, name, description, date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as  update_date 
+	from product_category`;
 	con.query(sql, function(err, results) { 
 		if (err) throw err;
 		for(var i = 0; i < results.length; i++) {
-			product_categorys[i] = new product_category(results[i].id, results[i].name, results[i].description);
+			product_categorys[i] = new product_category(results[i].id, results[i].name, results[i].description, results[i].create_date, results[i].update_date);
 		}
 		res.send(product_categorys);
 	})
@@ -348,16 +374,19 @@ app.get('/getMenuProduct_Category', (req, res) => {
 
 // 1.6. Tao moi nhom san pham
 app.post('/createProduct_Category', jsonParser, (req, res) => { 
+	// ngay hien tai => tuong duong voi ngay tao thong tin
+	var create_date = (new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + ((new Date()).getDate());
 	product_categorys.splice(0, products.length);
-	var sql = "insert into product_category(name, description, dele) values(?, ?, ?)";
-	sql = mysql.format(sql, [req.body.name, req.body.description, 0]);
+	var sql = "insert into product_category(name, description, dele, create_date) values(?, ?, ?, ?)";
+	sql = mysql.format(sql, [req.body.name, req.body.description, 0, create_date]);
 	con.query(sql, function(err, results) {
 		if (err) throw err;
-		sql = "select id, name, description from product_category";
+		var sql = `select id, name, description, date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as  update_date 
+	from product_category`;
 		con.query(sql, function(err, results) { 
 			if (err) throw err;
 			for(var i = 0; i < results.length; i++) {
-				product_categorys[i] = new product_category(results[i].id, results[i].name, results[i].description);
+				product_categorys[i] = new product_category(results[i].id, results[i].name, results[i].description, results[i].create_date, results[i].update_date);
 			}
 			res.send(product_categorys);
 		})
@@ -367,7 +396,6 @@ app.post('/createProduct_Category', jsonParser, (req, res) => {
 // 1.7. Cap nhat thong tin nhom san pham
 // Lay thong tin nhom san pham can cap nhat
 app.post('/getProductCategoryInfo', jsonParser, (req, res) => {
-	console.log(req.body.name);
 	var sql = "select name, description from product_category where name = ?";
 	sql = mysql.format(sql, req.body.name); 
 	con.query(sql, function(err, results) {
@@ -378,8 +406,11 @@ app.post('/getProductCategoryInfo', jsonParser, (req, res) => {
 
 // Cap nhat thong tin san pham
 app.post('/updateProduct_Category', jsonParser, (req, res) => { 
-	var sql = "update product_category set description = ? where name = ?";
-	sql = mysql.format(sql, [req.body.description, req.body.name]); 
+	// ngay hien tai => tuong duong voi ngay cap nhat thong tin
+	var update_date = (new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + ((new Date()).getDate());
+	 
+	var sql = "update product_category set description = ?, update_date = ? where name = ?";
+	sql = mysql.format(sql, [req.body.description, update_date, req.body.name]); 
 	con.query(sql, function(err, results) {
 		if (err) {
 			res.send("0");
@@ -394,13 +425,16 @@ app.post('/updateProduct_Category', jsonParser, (req, res) => {
 
 // 2.1. Tao moi kho hang 
 app.post('/createContainer', jsonParser, (req, res) => { 
+	// ngay hien tai => tuong duong voi ngay tao thong tin
+	var create_date = (new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + ((new Date()).getDate());
+	 
 	// sinh ma code ngau nhien cho kho hang
 	var rdmCode = "";
 	for( ; rdmCode.length < 6; rdmCode  += Math.random().toString(36).substr(2));
 	var code = "CONTAINER_" + rdmCode.substr(0, 6);
 
-	var sql = "insert into container(code, name, address, dele, mobile) values(?, ?, ?, ?, ?)";
-	sql = mysql.format(sql, [code, req.body.name, req.body.address, 0, req.body.mobile]); 
+	var sql = "insert into container(code, name, address, dele, mobile, create_date) values(?, ?, ?, ?, ?, ?)";
+	sql = mysql.format(sql, [code, req.body.name, req.body.address, 0, req.body.mobile, create_date]); 
 	con.query(sql, function(err, results) {
 		if (err) {
 			res.send("0");
@@ -416,12 +450,13 @@ let container = require('./container.js'); // Lop Product
 containers = new Array(); // Mang chua cac san pham
 app.get('/getMenuContainer', (req, res) => { 
 	containers.splice(0, containers.length);
-	var sql = "select * from container";
+	var sql = `select id, code, name, address, dele, mobile, 
+	date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date from container`;
 	con.query(sql, function(err, results) { 
 		if (err) throw err;
 		for(var i = 0; i < results.length; i++) {
 			containers[i] = new container(results[i].id, results[i].code, results[i].name, results[i].address,
-			results[i].dele, results[i].mobile);
+			results[i].dele, results[i].mobile, results[i].create_date, results[i].update_date);
 		}
 		res.send(containers);
 	})
@@ -431,18 +466,42 @@ app.get('/getMenuContainer', (req, res) => {
 app.post('/searchContainer', jsonParser, (req, res) => {
 	containers.splice(0, containers.length);
 	var sql;
-	if (req.body.name.trim() != "" || req.body.code.trim() != "") {
-		sql = "select * from container where name = ? or code = ?";
+
+	// chi tim kiem theo ten
+	if (req.body.name.trim() != "" && req.body.code.trim() == "") {
+		sql = `select id, code, name, address, dele, mobile, 
+		date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date from container
+		where name like ?`;
+		sql = mysql.format(sql, ["%" + req.body.name + "%"]); 
 	}
+
+	// chi tim kiem theo code
+	else if (req.body.name.trim() == "" && req.body.code.trim() != "") {
+		sql = `select id, code, name, address, dele, mobile, 
+		date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date from container
+		where code like ?`;
+		sql = mysql.format(sql, ["%" + req.body.code + "%"]); 
+	}
+
+	// tim kiem theo ca ten va code
+	else if (req.body.name.trim() != "" && req.body.code.trim() != "") {
+		sql = `select id, code, name, address, dele, mobile, 
+		date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date from container
+		where name = ? or code = ?`;
+		sql = mysql.format(sql, [req.body.name, req.body.code]); 
+	}
+
+	// name va code deu trong
 	else {
-		sql = "select * from container";
+		sql = `select id, code, name, address, dele, mobile, 
+	date_format(create_date, '%d-%m-%Y') as create_date, date_format(update_date, '%d-%m-%Y') as update_date from container`;
 	}
-	sql = mysql.format(sql, [req.body.name, req.body.code]); 
+	 
 	con.query(sql, function(err, results) { 
 		if (err) throw err;
 		for(var i = 0; i < results.length; i++) {
 			containers[i] = new container(results[i].id, results[i].code, results[i].name, results[i].address,
-			results[i].dele, results[i].mobile);
+			results[i].dele, results[i].mobile, results[i].create_date, results[i].update_date);
 		}
 		res.send(containers);
 	})
@@ -475,15 +534,16 @@ app.post('/updateContainerInfo', jsonParser, (req, res) => {
 // 2.3.2. Tinh trang kho hang
 app.post('/statusContainer', jsonParser, (req, res) => {
 	products.splice(0, products.length);
-	var sql = `select distinct product.id, product.code, user_id, product.name, amount, date_format(manufacturing_date, '%Y-%m-%d') as manufacturing_date, date_format(expiry_date, '%Y-%m-%d') as expiry_date from product, 
+	var sql = `select distinct product.id, product.code, user_id, product.name, amount, date_format(manufacturing_date, '%Y-%m-%d') as manufacturing_date,
+	 date_format(expiry_date, '%d-%m-%Y') as expiry_date from product, 
 	 container_product_detail where product.id = container_product_detail.product_id and container_product_detail.container_id = ?`;
 	sql = mysql.format(sql, req.body.id);
 	con.query(sql, function(err, results) {
 		if (err) throw err;
 		for(var i = 0; i < results.length; i++) {
-			products[i] = new product(results[i].id, results[i].code, results[i].name, "", "", "", "",
+			products[i] = new product(results[i].id, results[i].code, results[i].name, "", "", "", "", "", "",
 			 results[i].amount, results[i].manufacturing_date, results[i].expiry_date, results[i].user_id); 
-		}
+		} 
 		res.send(products);
 	})
 })
@@ -500,6 +560,9 @@ app.post('/getAnotherIdContainer', jsonParser, (req, res) => {
 
 // Cap nhat thong tin chuyen kho
 app.post('/moveProductInfo', jsonParser, (req, res) => {
+	// ngay hien tai => tuong duong voi ngay cap nhat thong tin
+	var update_date = (new Date()).getFullYear() + "-" + ((new Date()).getMonth() + 1) + "-" + ((new Date()).getDate());
+	 
 	/* Kiem tra hang hoa chuyen den da co trong kho dich chua
 	* 1. Da co => Cap nhat lai so luong cua hang hoa o ca 2 kho
 	* 2. Chua co => Them hang hoa vao kho dich va cap nhat hang hoa o kho nguon
@@ -514,8 +577,8 @@ app.post('/moveProductInfo', jsonParser, (req, res) => {
 		// Truong hop 1: San pham can chuyen da co trong kho dich
 		if (results.length != 0) {
 			// Cap nhat so luong cua kho dich
-			sql = "update container_product_detail set amount = ? where container_id = ? and product_id = ?";
-			sql = mysql.format(sql, [(parseInt(req.body.amount) + parseInt(results[0].amount)), req.body.container_to, req.body.product_id]);
+			sql = "update container_product_detail set amount = ?, update_date = ? where container_id = ? and product_id = ?";
+			sql = mysql.format(sql, [(parseInt(req.body.amount) + parseInt(results[0].amount)), update_date, req.body.container_to, req.body.product_id]);
 			con.query(sql, function(err, results) {
 				if (err) {
 					res.send("0");
@@ -524,8 +587,8 @@ app.post('/moveProductInfo', jsonParser, (req, res) => {
 			})
 
 			// Cap nhat so luong cua kho nguon
-			sql = "update container_product_detail set amount = ? where container_id = ? and product_id = ?";
-			sql = mysql.format(sql, [(parseInt(req.body.amount_before) - parseInt(req.body.amount)), req.body.container_from, req.body.product_id]);
+			sql = "update container_product_detail set amount = ?, update_date = ? where container_id = ? and product_id = ?";
+			sql = mysql.format(sql, [(parseInt(req.body.amount_before) - parseInt(req.body.amount)), update_date, req.body.container_from, req.body.product_id]);
 			con.query(sql, function(err, results) {
 				if (err) {
 					res.send("0");
@@ -534,9 +597,9 @@ app.post('/moveProductInfo', jsonParser, (req, res) => {
 			})
 
 			// Them thong tin vao bang container_product_log
-			sql = `insert into container_product_log(container_from, container_to, product_id, amount, manufacturing_date, expiry_date) 
-				values (?, ?, ?, ?, ?, ?)`;
-			sql = mysql.format(sql, [req.body.container_from, req.body.container_to, req.body.product_id, req.body.amount, req.body.manufacturing_date, req.body.expiry_date]);
+			sql = `insert into container_product_log(container_from, container_to, product_id, amount, manufacturing_date, expiry_date, update_date) 
+				values (?, ?, ?, ?, ?, ?, ?)`;
+			sql = mysql.format(sql, [req.body.container_from, req.body.container_to, req.body.product_id, req.body.amount, req.body.manufacturing_date, req.body.expiry_date, update_date]);
 			con.query(sql, function(err, results) {
 				if (err) {
 					res.send("0");
@@ -549,8 +612,8 @@ app.post('/moveProductInfo', jsonParser, (req, res) => {
 		// Truong hop 2: San pham can chuyen chua co trong kho dich
 		else {
 			// Them thong tin san pham vao kho dich
-			sql = "insert into container_product_detail(product_id, container_id, user_id, amount, manufacturing_date, expiry_date) values (?, ?, ?, ? ,? , ?)";
-			sql = mysql.format(sql, [req.body.product_id, req.body.container_to, req.body.user_id, req.body.amount, req.body.manufacturing_date, req.body.expiry_date]);
+			sql = "insert into container_product_detail(product_id, container_id, user_id, amount, manufacturing_date, expiry_date, update_date) values (?, ?, ?, ? ,? , ?, ?)";
+			sql = mysql.format(sql, [req.body.product_id, req.body.container_to, req.body.user_id, req.body.amount, req.body.manufacturing_date, req.body.expiry_date, update_date]);
 			con.query(sql, function(err, results) {
 				if (err) {
 					res.send("0");
@@ -559,8 +622,8 @@ app.post('/moveProductInfo', jsonParser, (req, res) => {
 			})
 
 			// Cap nhat so luong cua kho nguon
-			sql = "update container_product_detail set amount = ? where container_id = ? and product_id = ?";
-			sql = mysql.format(sql, [(parseInt(req.body.amount_before) - parseInt(req.body.amount)), req.body.container_from, req.body.product_id]);
+			sql = "update container_product_detail set amount = ?, update_date = ? where container_id = ? and product_id = ?";
+			sql = mysql.format(sql, [(parseInt(req.body.amount_before) - parseInt(req.body.amount)), update_date, req.body.container_from, req.body.product_id]);
 			con.query(sql, function(err, results) {
 				if (err) {
 					res.send("0");
@@ -569,9 +632,9 @@ app.post('/moveProductInfo', jsonParser, (req, res) => {
 			})
 
 			// Them thong tin vao bang container_product_log
-			sql = `insert into container_product_log(container_from, container_to, product_id, amount, manufacturing_date, expiry_date) 
-				values (?, ?, ?, ?, ?, ?)`;
-			sql = mysql.format(sql, [req.body.container_from, req.body.container_to, req.body.product_id, req.body.amount, req.body.manufacturing_date, req.body.expiry_date]);
+			sql = `insert into container_product_log(container_from, container_to, product_id, amount, manufacturing_date, expiry_date, update_date) 
+				values (?, ?, ?, ?, ?, ?, ?)`;
+			sql = mysql.format(sql, [req.body.container_from, req.body.container_to, req.body.product_id, req.body.amount, req.body.manufacturing_date, req.body.expiry_date, update_date]);
 			con.query(sql, function(err, results) {
 				if (err) {
 					res.send("0");
@@ -587,19 +650,41 @@ app.post('/moveProductInfo', jsonParser, (req, res) => {
 app.post('/searchProductStatusContainer', jsonParser, (req, res) => {
 	products.splice(0, products.length);
 	var sql;
-	if (req.body.name != "" || req.body.code != "") {
-		sql = `select distinct product.id, product.code, user_id, product.name, amount, date_format(manufacturing_date, '%Y-%m-%d') as manufacturing_date, date_format(expiry_date, '%Y-%m-%d') as expiry_date from product, 
-	 container_product_detail where product.id = container_product_detail.product_id and container_product_detail.container_id = ? and (product.name like ? or product.code like ?)`;
+	console.log(req.body.name);
+	console.log(req.body.code);
+
+	// Tim kiem theo ca name va code
+	if (req.body.name.trim() != "" && req.body.code.trim() != "") {
+		sql = `select distinct product.id, product.code, user_id, product.name, amount, date_format(manufacturing_date, '%d-%m-%Y') as manufacturing_date, date_format(expiry_date, '%Y-%m-%d') as expiry_date from product, 
+	 container_product_detail where product.id = container_product_detail.product_id and container_product_detail.container_id = ? and product.name = ? and product.code = ?`;
+		sql = mysql.format(sql, [req.body.id, req.body.name, req.body.code]);
 	}
-	else {
-		sql = `select distinct product.id, product.code, user_id, product.name, amount, date_format(manufacturing_date, '%Y-%m-%d') as manufacturing_date, date_format(expiry_date, '%Y-%m-%d') as expiry_date from product, 
+
+	// Chi tim kiem theo name
+	else if (req.body.name.trim() != "" && req.body.code.trim() == "") {
+		sql = `select distinct product.id, product.code, user_id, product.name, amount, date_format(manufacturing_date, '%d-%m-%Y') as manufacturing_date, date_format(expiry_date, '%Y-%m-%d') as expiry_date from product, 
+	 container_product_detail where product.id = container_product_detail.product_id and container_product_detail.container_id = ? and product.name like ?`;
+		sql = mysql.format(sql, [req.body.id, "%" +  req.body.name + "%"]);
+	}
+
+	// Chi tim kiem theo code
+	else if (req.body.name.trim() == "" && req.body.code.trim() != "") { 
+		sql = `select distinct product.id, product.code, user_id, product.name, amount, date_format(manufacturing_date, '%d-%m-%Y') as manufacturing_date, date_format(expiry_date, '%Y-%m-%d') as expiry_date from product, 
+	 container_product_detail where product.id = container_product_detail.product_id and container_product_detail.container_id = ? and product.code like ?`;
+		sql = mysql.format(sql, [req.body.id, "%" +  req.body.code + "%"]);
+	}
+
+	// name va code deu de trong
+	else { 
+		sql = `select distinct product.id, product.code, user_id, product.name, amount, date_format(manufacturing_date, '%d-%m-%Y') as manufacturing_date, date_format(expiry_date, '%Y-%m-%d') as expiry_date from product, 
 	 container_product_detail where product.id = container_product_detail.product_id and container_product_detail.container_id = ?`;
+		sql = mysql.format(sql, [req.body.id]);
 	}
-	sql = mysql.format(sql, [req.body.id, req.body.name, req.body.code]);
+ 
 	con.query(sql, function(err, results) {
 		if (err) throw err;
 		for(var i = 0; i < results.length; i++) {
-			products[i] = new product(results[i].id, results[i].code, results[i].name, "", "", "", "",
+			products[i] = new product(results[i].id, results[i].code, results[i].name, "", "", "", "", "", "",
 			 results[i].amount, results[i].manufacturing_date, results[i].expiry_date, results[i].user_id); 
 		}
 		res.send(products);
@@ -614,14 +699,15 @@ containerLogs = new Array(); // Mang chua thong tin cua lich su kho hang
 app.post('/getContainerLog', jsonParser, (req, res) => {
 	containerLogs.splice(0, containerLogs.length);
 	products.splice(0, products.length);
-	var sql = `select name, code, amount, container_from, container_to, date_format(manufacturing_date, '%Y-%m-%d') as manufacturing_date, date_format(expiry_date, '%Y-%m-%d') as expiry_date from product, 
+	var sql = `select distinct name, code, amount, container_from, container_to, date_format(manufacturing_date, '%d-%m-%Y') as manufacturing_date, date_format(expiry_date, '%d-%m-%Y') as expiry_date, 
+	 date_format(container_product_log.update_date, '%d-%m-%Y') as update_date from product, 
 	 container_product_log where product.id = container_product_log.product_id and container_product_log.container_from = ?`;
 	sql = mysql.format(sql, req.body.id); 
 	con.query(sql, function(err, results) {
 		if (err) throw err;
 		for(var i = 0; i < results.length; i++) {
 			containerLogs[i] = new container_log("", results[i].container_from, results[i].container_to, "", results[i].amount,
-				results[i].manufacturing_date, results[i].expiry_date, results[i].name, results[i].code); 
+				results[i].manufacturing_date, results[i].expiry_date, results[i].name, results[i].code, results[i].update_date); 
 		}
 		res.send(containerLogs);
 	})
@@ -632,20 +718,36 @@ app.post('/searchProductContainerLog', jsonParser, (req, res) => {
 	containerLogs.splice(0, containerLogs.length);
 	products.splice(0, products.length);
 	var sql;
-	if (req.body.name != "" || req.body.code != "") {
-		sql =  `select name, code, amount, container_from, container_to, date_format(manufacturing_date, '%Y-%m-%d') as manufacturing_date, date_format(expiry_date, '%Y-%m-%d') as expiry_date from product, 
-	 container_product_log where product.id = container_product_log.product_id and container_product_log.container_from = ? and (name = ? or code = ?)`;
+	if (req.body.name.trim() != "" && req.body.code.trim() != "") {
+		sql =  `select name, code, amount, container_from, container_to, date_format(manufacturing_date, '%d-%m-%Y') as manufacturing_date, date_format(expiry_date, '%d-%m-%Y') as expiry_date , 
+		 date_format(container_product_log.update_date, '%d-%m-%Y') as update_date from product,
+	 container_product_log where product.id = container_product_log.product_id and container_product_log.container_from = ? and name = ? and code = ?`;
+		sql = mysql.format(sql, [req.body.id, req.body.name.trim(), req.body.code.trim()]);
+	}
+	else if (req.body.name.trim() != "" && req.body.code.trim() == "") {
+		sql =  `select name, code, amount, container_from, container_to, date_format(manufacturing_date, '%d-%m-%Y') as manufacturing_date, date_format(expiry_date, '%d-%m-%Y') as expiry_date , 
+		 date_format(container_product_log.update_date, '%d-%m-%Y') as update_date from product, 
+	 container_product_log where product.id = container_product_log.product_id and container_product_log.container_from = ? and name like ?`;
+		sql = mysql.format(sql, [req.body.id, "%" + req.body.name.trim() + "%"]);
+	}
+	else if (req.body.name.trim() == "" && req.body.code.trim() != "") {
+		sql =  `select name, code, amount, container_from, container_to, date_format(manufacturing_date, '%d-%m-%Y') as manufacturing_date, date_format(expiry_date, '%d-%m-%Y') as expiry_date , 
+		 date_format(container_product_log.update_date, '%d-%m-%Y') as update_date from product,
+	 container_product_log where product.id = container_product_log.product_id and container_product_log.container_from = ? and code like ?`;
+		sql = mysql.format(sql, [req.body.id, "%" + req.body.code.trim() + "%"]);
 	}
 	else {
-		sql =  `select name, code, amount, container_from, container_to, date_format(manufacturing_date, '%Y-%m-%d') as manufacturing_date, date_format(expiry_date, '%Y-%m-%d') as expiry_date from product, 
+		sql =  `select name, code, amount, container_from, container_to, date_format(manufacturing_date, '%d-%m-%Y') as manufacturing_date, date_format(expiry_date, '%d-%m-%Y') as expiry_date , 
+		 date_format(container_product_log.update_date, '%d-%m-%Y') as update_date from product, 
 	 container_product_log where product.id = container_product_log.product_id and container_product_log.container_from = ?`;
+		sql = mysql.format(sql, [req.body.id]);
 	}
-	sql = mysql.format(sql, [req.body.id, req.body.name, req.body.code]); 
+  
 	con.query(sql, function(err, results) {
 		if (err) throw err;
 		for(var i = 0; i < results.length; i++) {
 			containerLogs[i] = new container_log("", results[i].container_from, results[i].container_to, "", results[i].amount,
-				results[i].manufacturing_date, results[i].expiry_date, results[i].name, results[i].code); 
+				results[i].manufacturing_date, results[i].expiry_date, results[i].name, results[i].code, results[i].update_date); 
 		}
 		res.send(containerLogs);
 	})
@@ -709,7 +811,7 @@ app.get('/getProvidersInfo', (req, res) => {
 	con.query(sql, function(err, results) {
 		k = 0;
 		if (err) throw err; 
-		for (var i = 0; i < results.length - 1; i++) {  
+		for (var i = 0; i < results.length; i++) {  
 			product_types = results[i].product_type; 
 			for (var j = i + 1; j <= results.length ; j++) {  
 				if (j == results.length) { 
@@ -732,6 +834,7 @@ app.get('/getProvidersInfo', (req, res) => {
 				}
 			} 
 		}
+		console.log(providers);
 		res.send(providers);
 	}) 
 })
@@ -787,13 +890,13 @@ app.post('/searchProviderProducts', jsonParser, (req, res)=> {
 	else if (req.body.name.trim() != "" && req.body.code.trim() == ""){
 		sql = `select product.id, code, name, description, image, price from product, provider_product
 		 	where user_id = ? and provider_product.product_id = product.id and name like ?`;
-		 	sql = mysql.format(sql, [req.body.user_id, req.body.name.trim()]);
+		 	sql = mysql.format(sql, [req.body.user_id, "%" +  req.body.name.trim() + "%"]);
 	}
 	// Tim kiem theo ma
 	else if (req.body.name.trim() == "" && req.body.code.trim() != ""){
 		sql = `select product.id, code, name, description, image, price from product, provider_product
 		 	where user_id = ? and provider_product.product_id = product.id and code like ?`;
-		 	sql = mysql.format(sql, [req.body.user_id, req.body.code.trim()]);
+		 	sql = mysql.format(sql, [req.body.user_id, "%" +  req.body.code.trim() + "%"]);
 	}
 	// Tim kiem theo ca ten va ma
 	else {
@@ -880,8 +983,9 @@ app.post('/createOrder', jsonParser, function(req, res) {
 // 3.2. Quan ly don hang 
 // Lay thong tin tong quat don nhap hang, xuat hang trong bang orders
 app.get('/getOrderImportInfo', function(req, res) {
-	var sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%Y-%m-%d') as order_date,  
-		date_format(import_date, '%Y-%m-%d') as import_date from orders, user1 where orders.user_id = user1.id and acount_type = ?`;
+	var sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%d-%m-%Y') as order_date,  
+		date_format(import_date, '%d-%m-%Y') as import_date, orders.status 
+		from orders, user1 where orders.user_id = user1.id and acount_type = ?`;
 	sql = mysql.format(sql, "Nhà cung cấp");
 	con.query(sql, function(err, results) {
 		if (err) throw err;
@@ -889,8 +993,8 @@ app.get('/getOrderImportInfo', function(req, res) {
 	})
 })
 app.get('/getOrderExportInfo', function(req, res) {
-	var sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%Y-%m-%d') as order_date,  
-		date_format(export_date, '%Y-%m-%d') as export_date, orders.status from orders, user1 where orders.user_id = user1.id and acount_type = ?`;
+	var sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%d-%m-%Y') as order_date, orders.status,
+		date_format(export_date, '%d-%m-%Y') as export_date, orders.status from orders, user1 where orders.user_id = user1.id and acount_type = ?`;
 	sql = mysql.format(sql, "Siêu thị");
 	con.query(sql, function(err, results) {
 		if (err) throw err;
@@ -942,8 +1046,8 @@ app.post('/searchOrder', jsonParser, function(req, res) {
 	if (req.body.code.trim() != "" && req.body.name.trim() == "") {
 		// Neu la don nhap hang
 		if (req.body.order_type == "nhaphang") {
-			sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%Y-%m-%d') as order_date,  
-				date_format(import_date, '%Y-%m-%d') as import_date from orders, user1 
+			sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%d-%m-%Y') as order_date,  
+				date_format(import_date, '%d-%m-%Y') as import_date from orders, user1 
 				where orders.user_id = user1.id and acount_type = ? and orders.code like ?`;
 			sql = mysql.format(sql, ["Nhà cung cấp", "%" + req.body.code.trim() + "%"]);
 			con.query(sql, function(err, results) {
@@ -953,8 +1057,8 @@ app.post('/searchOrder', jsonParser, function(req, res) {
 		}
 		// Neu la don dat hang
 		if (req.body.order_type == "dathang") {
-			sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%Y-%m-%d') as order_date,  
-				date_format(export_date, '%Y-%m-%d') as export_date, orders.status from orders, user1 
+			sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%d-%m-%Y') as order_date,  
+				date_format(export_date, '%d-%m-%Y') as export_date, orders.status from orders, user1 
 				where orders.user_id = user1.id and acount_type = ? and orders.code like ?`;
 			sql = mysql.format(sql, ["Siêu thị", "%" + req.body.code.trim() + "%"]);
 			con.query(sql, function(err, results) {
@@ -968,8 +1072,8 @@ app.post('/searchOrder', jsonParser, function(req, res) {
 	else if (req.body.code.trim() == "" && req.body.name.trim() != "") {
 		 // Neu la don nhap hang
 		if (req.body.order_type == "nhaphang") {
-			sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%Y-%m-%d') as order_date,  
-				date_format(import_date, '%Y-%m-%d') as import_date from orders, user1 
+			sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%d-%m-%Y') as order_date,  
+				date_format(import_date, '%d-%m-%Y') as import_date from orders, user1 
 				where orders.user_id = user1.id and acount_type = ? and name like ?`;
 			sql = mysql.format(sql, ["Nhà cung cấp", "%" + req.body.name.trim() + "%"]);
 			con.query(sql, function(err, results) {
@@ -979,8 +1083,8 @@ app.post('/searchOrder', jsonParser, function(req, res) {
 		}
 		// Neu la don dat hang
 		if (req.body.order_type == "dathang") {
-			sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%Y-%m-%d') as order_date,  
-				date_format(export_date, '%Y-%m-%d') as export_date, orders.status from orders, user1 
+			sql = `select orders.id, orders.code, name, amount_total, price_total, date_format(order_date, '%d-%m-%Y') as order_date,  
+				date_format(export_date, '%d-%m-%Y') as export_date, orders.status from orders, user1 
 				where orders.user_id = user1.id and acount_type = ? and name like ?`;
 			sql = mysql.format(sql, ["Siêu thị", "%" + req.body.name.trim() + "%"]);
 			con.query(sql, function(err, results) {

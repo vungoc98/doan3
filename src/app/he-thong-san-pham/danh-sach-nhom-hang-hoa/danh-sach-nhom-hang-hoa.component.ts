@@ -28,7 +28,7 @@ export class DanhSachNhomHangHoaComponent implements OnInit {
     .then(res => res.json())
     .then(resJson => {
         for (var i = 0; i < resJson.length; i++) {
-        this.product_categorys[i] = new ProductCategory(resJson[i].id, resJson[i].name, resJson[i].description);
+        this.product_categorys[i] = new ProductCategory(resJson[i].id, resJson[i].name, resJson[i].description, resJson[i].create_date, resJson[i].update_date);
       }
     })
   }
@@ -38,8 +38,9 @@ export class DanhSachNhomHangHoaComponent implements OnInit {
     // Kiem tra co trung ten nhom san pham
     var i;
     for (i = 0; i < this.product_categorys.length; i++) {
-      if (this.product_categorys[i].name == formCreateGroupProduct.value.name) {
+      if (this.product_categorys[i].name.trim() == formCreateGroupProduct.value.name.trim()) {
         alert("Trùng tên nhóm sản phẩm");
+        console.log("Trùng tên");
         break;
       }
     } 
@@ -53,7 +54,7 @@ export class DanhSachNhomHangHoaComponent implements OnInit {
       .then(res => res.json())
       .then(resJson => {
         for (i = 0; i < resJson.length; i++) {
-          this.product_categorys[i] = new ProductCategory(resJson[i].id, resJson[i].name, resJson[i].description);
+          this.product_categorys[i] = new ProductCategory(resJson[i].id, resJson[i].name, resJson[i].description, resJson[i].create_date, resJson[i].update_date);
         } 
       })
     } 

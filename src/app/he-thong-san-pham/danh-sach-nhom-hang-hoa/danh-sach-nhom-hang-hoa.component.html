@@ -43,6 +43,8 @@
 							<th>STT</th>
 							<th>Tên</th>
 							<th>Mô tả</th>
+							<th>Ngày tạo</th>
+							<th>Ngày cập nhật</th>
 							<th>Action</th>
 						</thead>
 						<tbody>
@@ -50,6 +52,8 @@
 								<td>{{i + 1}}</td>
 								<td>{{product_category.name}}</td>
 								<td>{{product_category.description}}</td>
+								<td>{{product_category.create_date}}</td>
+								<td>{{product_category.update_date}}</td>
 								<td>
 									<a routerLink="/hethongsanpham/hethongnhomsanpham/capnhatnhomsanpham/{{product_category.name}}" class="btn btn-primary">Cập nhật</a>
 								</td>

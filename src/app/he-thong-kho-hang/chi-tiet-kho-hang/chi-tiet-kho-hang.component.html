@@ -10,7 +10,7 @@
 			<hr> 
 			<div>
 			  <tabset [justified]="true">
-			    <tab heading="Thông tin cơ bản" id="tab1">
+			    <tab heading="Thông tin cơ bản" id="tab1" (select)="chiTietKhoHang('thongtincoban');">
 			    	<div class="tab">
 						<form (ngSubmit)="onSubmitUpdate(formUpdateContainer);" [formGroup]="formUpdateContainer">
 							<div class="form-group">
@@ -60,7 +60,7 @@
 						</form>	  
 					</div>
 			    </tab>
-			    <tab heading="Tình trạng kho hàng">
+			    <tab heading="Tình trạng kho hàng" (select)="chiTietKhoHang('tinhtrangkhohang');">
 			    	<div class="tab">
 				    	<form (ngSubmit)="onSubmitTinhTrangKhoHang(formSearchProduct);" [formGroup]="formSearchProduct">
 							<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
@@ -205,7 +205,7 @@
 						</form>
 					</div>
 			    </tab>
-			    <tab heading="Lịch sử kho hàng">
+			    <tab heading="Lịch sử kho hàng" (select)="chiTietKhoHang('lichsukhohang');">
 			    	<div class="tab">
 			    		<form (ngSubmit)="onSubmitLichSuKhoHang(formSearchProduct);" [formGroup]="formSearchProduct">
 						<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
@@ -237,6 +237,7 @@
 									<th>Số lượng</th>
 									<th>Ngày sản xuất</th>
 									<th>Hạn sử dụng</th>
+									<th>Ngày cập nhật</th>
 								</thead>
 								<tbody>
 									<tr *ngFor="let container of containers; let i = index">
@@ -248,6 +249,7 @@
 										<td>{{container.amount}}</td>
 										<td>{{container.manufacturing_date}}</td>
 										<td>{{container.expiry_date}}</td>
+										<td>{{container.update_date}}</td>
 									</tr>
 								</tbody>
 							</table>
@@ -255,7 +257,7 @@
 					</form>
 			    	</div>
 			    </tab>
-			    <tab heading="Thống kê kho hàng" (select)="thongKeKhoHang();">
+			    <tab heading="Thống kê kho hàng"(select)="chiTietKhoHang('thongkekhohang');">
 			    	<div class="form-group" style="margin-top: 30px;">
 						<table class="table table-striped">
 							<thead>

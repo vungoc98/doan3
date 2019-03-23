@@ -1,5 +1,5 @@
 module.exports = class ContainerLog {
-	constructor(id, container_from, container_to, product_id, amount, manufacturing_date, expiry_date, name, code) {
+	constructor(id, container_from, container_to, product_id, amount, manufacturing_date, expiry_date, name, code, update_date) {
 		this.id = id;
 		this.container_from = container_from;
 		this.container_to = container_to;
@@ -9,5 +9,6 @@ module.exports = class ContainerLog {
 		this.expiry_date = expiry_date;
 		this.name = name;
 		this.code = code;
+		this.update_date = update_date;
 	}
 }

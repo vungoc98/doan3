@@ -46,6 +46,8 @@
 							<th>Mô tả</th>
 							<th>Ảnh</th>
 							<th>Giá</th>
+							<th>Ngày tạo</th>
+							<th>Ngày cập nhật</th>
 							<th>Action</th>
 						</thead>
 						<tbody>
@@ -57,6 +59,8 @@
 								<td>{{product.description}}</td>
 								<td><img src="{{product.image}}" style="max-height: 50px; max-width: 50px;"></td>
 								<td>{{product.price}}</td>
+								<td>{{product.create_date}}</td>
+								<td>{{product.update_date}}</td>
 								<td>
 									<a type="submit" class="btn btn-primary" routerLink="/hethongsanpham/danhsachsanpham/capnhatsanpham/{{product.id}}" >Cập nhật</a>
 								</td> 

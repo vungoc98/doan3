@@ -75,6 +75,7 @@ export class TaoDonNhapHangComponent implements OnInit {
     this.total();
   }
 
+  // Thong tin cac nha cung cap
   async openModal1(template1: TemplateRef<any>) {
     this.providers.splice(0, this.providers.length);
     // lay danh sach nha cung cap

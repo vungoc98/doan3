@@ -41,6 +41,7 @@
 											<th>Tổng tiền</th>
 											<th>Ngày tạo đơn</th>
 											<th>Ngày nhập hàng</th> 
+											<th>Trạng thái</th> 
 											<th>Action</th>
 										</thead>
 										<tbody>
@@ -51,7 +52,10 @@
 												<td>{{import.amount_total}}</td>
 												<td>{{import.price_total}}</td>
 												<td>{{import.order_date}}</td>
-												<td>{{import.import_date}}</td> 
+												<td>{{import.import_date}}</td>  
+												<td>
+													<button class="btn btn-danger" disabled="">{{import.status}}</button>
+												</td>
 												<td>
 													<button routerLink="/quanlydonhang/{{'donnhaphang'}}/xemchitiet/{{import.id}}" class="btn btn-primary">Xem chi tiết</button>
 												</td>
@@ -106,7 +110,7 @@
 												<td>{{export.order_date}}</td>
 												<td>{{export.export_date}}</td> 
 												<td>
-													<button class="btn btn-danger">{{export.status}}</button>
+													<button class="btn btn-danger" disabled="">{{export.status}}</button>
 												</td>
 												<td *ngIf="xuathang">
 													<button class="btn btn-primary">Xuất hàng</button>

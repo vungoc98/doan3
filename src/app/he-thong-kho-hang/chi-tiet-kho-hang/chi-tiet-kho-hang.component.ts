@@ -41,14 +41,12 @@ export class ChiTietKhoHangComponent implements OnInit {
           code: '',
           address: '',
           mobile: '',
-        });
-    this.statusContainer.splice(0, this.statusContainer.length);
-    this.containers.splice(0, this.containers.length);
+        }); 
   	this.route.paramMap.subscribe((params: ParamMap) => {
   		this.id = params.get('id');
-  	});
-  
-  	// Lay thong tin kho hang co id = this.id
+  	}); 
+
+    // Lay thong tin kho hang co id = this.id
     var url = "http://localhost:3000/getContainerInfo";
     var headers = new Headers({ 'Content-Type': 'application/json' });
     var body = JSON.stringify({'id': this.id});
@@ -63,20 +61,6 @@ export class ChiTietKhoHangComponent implements OnInit {
           mobile: resJson[0].mobile,
         });
     })
-
-    // Tinh trang kho hang co id = this.id
-    url = "http://localhost:3000/statusContainer";
-    headers = new Headers({ 'Content-Type': 'application/json' });
-    body = JSON.stringify({'id': this.id});
-    await this.http.post(url, body, { headers: headers })
-    .toPromise()
-    .then(res => res.json())
-    .then(resJson => {
-      for(var i = 0; i < resJson.length; i++) {
-        this.statusContainer[i] = resJson[i];
-      }
-    })
-
     // Lay id cua cac kho hang khac
     url = "http://localhost:3000/getAnotherIdContainer";
     headers = new Headers({ 'Content-Type': 'application/json' });
@@ -89,20 +73,68 @@ export class ChiTietKhoHangComponent implements OnInit {
         this.container_des[i] = resJson[i].id;
       }
     })
-
-    // Lich su kho hang
-    url = "http://localhost:3000/getContainerLog";
-    headers = new Headers({ 'Content-Type': 'application/json' });
-    body = JSON.stringify({ 'id': this.id });
-    await this.http.post(url, body, { headers: headers })
-    .toPromise()
-    .then(res => res.json())
-    .then(resJson => {
-      for (var i = 0; i < resJson.length; i++) {
-        this.containers[i] = resJson[i];
-      }
-    })
+ 
   }
+
+
+  async chiTietKhoHang(tab: string) {
+    // tinh trang kho hang
+    if (tab == "tinhtrangkhohang") {
+      this.statusContainer.splice(0, this.statusContainer.length);
+      // Tinh trang kho hang co id = this.id
+      const url = "http://localhost:3000/statusContainer";
+      const headers = new Headers({ 'Content-Type': 'application/json' });
+      const body = JSON.stringify({'id': this.id});
+      await this.http.post(url, body, { headers: headers })
+      .toPromise()
+      .then(res => res.json())
+      .then(resJson => {
+        for(var i = 0; i < resJson.length; i++) {
+          this.statusContainer[i] = resJson[i]; 
+        }
+      })
+      this.formSearchProduct.setValue({
+        name: '',
+        code: ''
+      })
+    }
+
+    // lich su kho hang
+    else if (tab == "lichsukhohang") {
+      this.containers.splice(0, this.containers.length);
+      const url = "http://localhost:3000/getContainerLog";
+      const headers = new Headers({ 'Content-Type': 'application/json' });
+      const body = JSON.stringify({ 'id': this.id });
+      await this.http.post(url, body, { headers: headers })
+      .toPromise()
+      .then(res => res.json())
+      .then(resJson => {
+        for (var i = 0; i < resJson.length; i++) {
+          this.containers[i] = resJson[i]; 
+        }
+      })
+      this.formSearchProduct.setValue({
+        name: '',
+        code: ''
+      })
+    }
+
+    else if (tab == "thongkekhohang") {
+      const url = "http://localhost:3000/thongKeKhoHang";
+      const headers = new Headers( {'Content-Type': 'application/json' });
+      const body = JSON.stringify( {'id': this.id }); // Truyen cho server id cua kho hang can thong ke
+      this.http.post(url, body, { headers: headers })
+      .toPromise()
+      .then(res => res.json())
+      .then(resJson => {
+        this.amount_from = resJson.amount_from; 
+        this.amount_order = resJson.amount_order;
+        this.amount_to = resJson.amount_to;
+        this.amount_rest = resJson.amount_rest;
+      }) 
+    }
+  }
+
 // cap nhat thong tin kho hang
   async onSubmitUpdate(formUpdateContainer) {
     const url = "http://localhost:3000/updateContainerInfo";
@@ -127,13 +159,14 @@ export class ChiTietKhoHangComponent implements OnInit {
     this.statusContainer.splice(0, this.statusContainer.length);
     const url = "http://localhost:3000/searchProductStatusContainer";
     const headers = new Headers({ 'Content-Type': 'application/json' });
-    const body = JSON.stringify({'id': this.id, 'name': formSearchProduct.value.name.trim(), 'code': formSearchProduct.value.code.trim()});
+    const body = JSON.stringify({'id': this.id, 'name': formSearchProduct.value.name, 'code': formSearchProduct.value.code});
     await this.http.post(url, body, { headers: headers })
     .toPromise()
     .then(res => res.json())
     .then(resJson => {
       for(var i = 0; i < resJson.length; i++) {
         this.statusContainer[i] = resJson[i];
+   
       }
     })
   }
@@ -144,7 +177,7 @@ export class ChiTietKhoHangComponent implements OnInit {
     this.statusContainer.splice(0, this.statusContainer.length);
     const url = "http://localhost:3000/searchProductContainerLog";
     const headers = new Headers({ 'Content-Type': 'application/json' });
-    const body = JSON.stringify({'id': this.id, 'name': formSearchProduct.value.name.trim(), 'code': formSearchProduct.value.code.trim()});
+    const body = JSON.stringify({'id': this.id, 'name': formSearchProduct.value.name , 'code': formSearchProduct.value.code});
     await this.http.post(url, body, { headers: headers })
     .toPromise()
     .then(res => res.json())
@@ -155,7 +188,37 @@ export class ChiTietKhoHangComponent implements OnInit {
     })
   }
 
+  // Chuyen san pham sang kho khac
+  openModal(template: TemplateRef<any>, code_Product) {
+    this.modalRef = this.modalService.show(template);
+
+    // Khoi tao form
+    for (var i = 0; i < this.statusContainer.length; i++) {
+      if (this.statusContainer[i].code == code_Product)
+      {
+        this.container_to = "";
+        this.amount = this.statusContainer[i].amount;
+        this.product_id = this.statusContainer[i].id;
+        this.user_id = this.statusContainer[i].user_id;
+
+    
+    console.log("user_id: " + this.user_id);
+        this.formMoveProduct = this.fb.group({
+          code: code_Product,
+          name: this.statusContainer[i].name,
+          amount: this.statusContainer[i].amount,
+          manufacturing_date: this.statusContainer[i].manufacturing_date,
+          expiry_date: this.statusContainer[i].expiry_date,
+          container_from: this.id,
+        });
+        break;
+      }
+    } 
+
+  }
+
   moveProduct(formMoveProduct) {
+    console.log("user_id: " + this.user_id);
     // Kiem tra da chon kho dich chua
     if (this.container_to == "") {
       alert("Mời bạn chọn kho đích.");
@@ -188,47 +251,4 @@ export class ChiTietKhoHangComponent implements OnInit {
       }) 
     }
   }
-
-  // Chuyen san pham sang kho khac
-  openModal(template: TemplateRef<any>, code_Product) {
-    this.modalRef = this.modalService.show(template);
-
-    // Khoi tao form
-    for (var i = 0; i < this.statusContainer.length; i++) {
-      if (this.statusContainer[i].code == code_Product)
-      {
-        this.container_to = "";
-        this.amount = this.statusContainer[i].amount;
-        this.product_id = this.statusContainer[i].id;
-        this.user_id = this.statusContainer[i].user_id;
-        this.formMoveProduct = this.fb.group({
-          code: code_Product,
-          name: this.statusContainer[i].name,
-          amount: this.statusContainer[i].amount,
-          manufacturing_date: this.statusContainer[i].manufacturing_date,
-          expiry_date: this.statusContainer[i].expiry_date,
-          container_from: this.id,
-        });
-        break;
-      }
-    } 
-  }
-
-  // Thong ke kho hang
-  thongKeKhoHang() {
-    const url = "http://localhost:3000/thongKeKhoHang";
-    const headers = new Headers( {'Content-Type': 'application/json' });
-    const body = JSON.stringify( {'id': this.id }); // Truyen cho server id cua kho hang can thong ke
-    this.http.post(url, body, { headers: headers })
-    .toPromise()
-    .then(res => res.json())
-    .then(resJson => {
-      this.amount_from = resJson.amount_from; 
-      this.amount_order = resJson.amount_order;
-      this.amount_to = resJson.amount_to;
-      this.amount_rest = resJson.amount_rest;
-    })
-    console.log(this.amount_from);
-  }
-
 }
