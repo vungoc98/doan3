@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Http, Headers } from '@angular/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-danh-sach-nhom-nguoi-dung',
@@ -15,7 +16,7 @@ export class DanhSachNhomNguoiDungComponent implements OnInit {
   users = new Array(); // Danh sach nguoi dung 
   acount_type; // phan loai nguoi dung
   srcImage;
-  constructor(private fb: FormBuilder, private modalService: BsModalService, private http: Http, private element: ElementRef) { }
+  constructor(private router: Router, private fb: FormBuilder, private modalService: BsModalService, private http: Http, private element: ElementRef) { }
 
   ngOnInit() {
     this.formAddDistributor = this.fb.group({
@@ -33,6 +34,12 @@ export class DanhSachNhomNguoiDungComponent implements OnInit {
       name: '',
   		code: ''
   	}); 
+
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
 
     // lay danh sach nguoi dung cho tab mac dinh
     this.users.splice(0, this.users.length);

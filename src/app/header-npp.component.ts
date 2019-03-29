@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { LoginService } from './login/login.service';
 import { AcountInfoService } from './acount-info.service';
 import { Http, Headers } from '@angular/http';
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-header-npp',
@@ -14,14 +15,17 @@ export class HeaderNPPComponent implements OnInit {
   tenTk; // luu ten tai khoan cua nguoi dung
   information: Login; // thong tin ban dau cua nguoi dung khi login
   info: Login; // Lay lai thong tin cua nguoi dung khi ho reload lai page
-  constructor(private loginService: LoginService, private acountInfo: AcountInfoService, private http: Http) { 
+  constructor(private router: Router, private loginService: LoginService, private acountInfo: AcountInfoService, private http: Http) { 
   }
 
   ngOnInit() { 
     this.tenTk = sessionStorage.getItem('username');
   }
  
-
+  logOut() { 
+    this.router.navigateByUrl("");  
+    sessionStorage.clear();
+  }
 }
 
 class Login { 

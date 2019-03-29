@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Http, Headers } from '@angular/http';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-quan-ly-don-hang',
   templateUrl: './quan-ly-don-hang.component.html',
@@ -14,13 +15,19 @@ export class QuanLyDonHangComponent implements OnInit {
   listOrderImport = new Array(); // danh sach don nhap hang
   listOrderExport = new Array(); // danh sach don dat hang
   order_type; // Loai don hang (don nhap hang, don dat hang)
-  constructor(private fb: FormBuilder, private http: Http) { }
+  constructor(private fb: FormBuilder, private http: Http, private router: Router) { }
 
   ngOnInit() {
   	this.formSearch = this.fb.group({
   		code: '', // Ma don hang
       name: '' // Ten nha cung cap (hoac sieu thi)
   	});
+
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
 
     // Lay danh sach don nhap hang
     var url = "http://localhost:3000/getOrderImportInfo";
@@ -47,7 +54,7 @@ export class QuanLyDonHangComponent implements OnInit {
     })
   }
 
-  // Tim loai don hang
+  // Tim loai don hang => hien giao dien tuong ung
   select(type: string) {
     this.order_type = type;
   }
@@ -71,6 +78,9 @@ export class QuanLyDonHangComponent implements OnInit {
         this.listOrderExport.splice(0, this.listOrderExport.length);
         for (var i = 0; i < resJson.length; i++) {
           this.listOrderExport[i] = resJson[i];
+          // if (this.listOrderExport[i].status == "Đã giao") {
+          //   this.listOrderExport[i].
+          // }
         }
       }
     })

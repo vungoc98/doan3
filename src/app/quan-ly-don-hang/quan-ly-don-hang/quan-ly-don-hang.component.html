@@ -17,10 +17,10 @@
 								<div class="form-group" style="margin-top: 20px;">
 									<div class="row">
 										<div class="col-sm-3">
-											<input class="search" type="text" placeholder="Nhập mã đơn hàng..." formControlName="code">
+											<input type="text" placeholder="Nhập mã đơn hàng..." formControlName="code" class="form-control">
 										</div>
 										<div class="col-sm-3">
-											 <input class="search" type="text" placeholder="Nhập tên nhà cung cấp..." formControlName="name"> 
+											 <input type="text" placeholder="Nhập tên nhà cung cấp..." formControlName="name" class="form-control"> 
 										</div>
 										<div class="btn-group">
 											<div class="col-sm-3">
@@ -53,9 +53,7 @@
 												<td>{{import.price_total}}</td>
 												<td>{{import.order_date}}</td>
 												<td>{{import.import_date}}</td>  
-												<td>
-													<button class="btn btn-danger" disabled="">{{import.status}}</button>
-												</td>
+												<td>{{import.status}}</td>
 												<td>
 													<button routerLink="/quanlydonhang/{{'donnhaphang'}}/xemchitiet/{{import.id}}" class="btn btn-primary">Xem chi tiết</button>
 												</td>
@@ -73,10 +71,10 @@
 								<div class="form-group" style="margin-top: 20px;">
 									<div class="row">
 										<div class="col-sm-3">
-											<input class="search" type="text" placeholder="Nhập mã đơn hàng..." formControlName="code">
+											<input class="form-control" type="text" placeholder="Nhập mã đơn hàng..." formControlName="code">
 										</div>
 										<div class="col-sm-3">
-											 <input class="search" type="text" placeholder="Nhập tên siêu thị..." formControlName="name"> 
+											 <input class="form-control" type="text" placeholder="Nhập tên siêu thị..." formControlName="name"> 
 										</div>
 										<div class="btn-group">
 											<div class="col-sm-3">
@@ -97,7 +95,9 @@
 											<th>Tổng tiền</th>
 											<th>Ngày tạo đơn</th>
 											<th>Ngày xuất hàng</th>
+											<th>Ngày cập nhật</th>
 											<th>Trạng thái</th>
+											<th>Ghi chú</th>
 											<th>Action</th>
 										</thead>
 										<tbody>
@@ -106,16 +106,13 @@
 												<td>{{export.code}}</td>
 												<td>{{export.name}}</td>
 												<td>{{export.amount_total}}</td>
-												<td>{{export.price_total}}</td>
-												<td>{{export.order_date}}</td>
+												<td>{{export.price_total}}</td> 
+												<td>{{export.order_date}}</td> 
 												<td>{{export.export_date}}</td> 
-												<td>
-													<button class="btn btn-danger" disabled="">{{export.status}}</button>
-												</td>
-												<td *ngIf="xuathang">
-													<button class="btn btn-primary">Xuất hàng</button>
-												</td>
-												<td *ngIf="xemchitiet">
+												<td>{{export.update_date}}</td>
+												<td>{{export.status}} </td> 
+												<td>{{export.reason}}</td>
+												<td> 
 													<button class="btn btn-primary" routerLink="/quanlydonhang/{{'dondathang'}}/xemchitiet/{{export.id}}">Xem chi tiết</button>
 												</td>
 											</tr>

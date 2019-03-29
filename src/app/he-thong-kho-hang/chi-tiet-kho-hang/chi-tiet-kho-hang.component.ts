@@ -29,6 +29,7 @@ export class ChiTietKhoHangComponent implements OnInit {
   amount_order; // so luong chuyen di cho don dat hang
   amount_to; // so luong chuyen kho (chuyen cho kho khac)
   amount_rest; // so luong con lai trong kho
+  products = new Array(); // mang cac san pham con lai trong kho
   constructor(private http: Http, private modalService: BsModalService, private route: ActivatedRoute, private fb: FormBuilder, private router: Router) { }
 
   async ngOnInit() { 
@@ -45,6 +46,11 @@ export class ChiTietKhoHangComponent implements OnInit {
   	this.route.paramMap.subscribe((params: ParamMap) => {
   		this.id = params.get('id');
   	}); 
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
 
     // Lay thong tin kho hang co id = this.id
     var url = "http://localhost:3000/getContainerInfo";
@@ -119,7 +125,9 @@ export class ChiTietKhoHangComponent implements OnInit {
       })
     }
 
+    // thong ke kho hang
     else if (tab == "thongkekhohang") {
+      this.products.splice(0, this.products.length);
       const url = "http://localhost:3000/thongKeKhoHang";
       const headers = new Headers( {'Content-Type': 'application/json' });
       const body = JSON.stringify( {'id': this.id }); // Truyen cho server id cua kho hang can thong ke
@@ -131,6 +139,7 @@ export class ChiTietKhoHangComponent implements OnInit {
         this.amount_order = resJson.amount_order;
         this.amount_to = resJson.amount_to;
         this.amount_rest = resJson.amount_rest;
+        this.products = resJson.products; 
       }) 
     }
   }

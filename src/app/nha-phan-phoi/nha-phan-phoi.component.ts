@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NPPService } from './nha-phan-phoi.service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
 @Component({
   selector: 'app-nha-phan-phoi',
@@ -46,11 +46,17 @@ export class NhaPhanPhoiComponent implements OnInit {
    	this.isShow3 = false;
    	this.isShow4 = true;
   }
-  constructor(private route: ActivatedRoute, private nppservice: NPPService) {
+  constructor(private route: ActivatedRoute, private nppservice: NPPService, private router: Router) {
     this.acountInfo = new AcountInfo();
   }
 
   ngOnInit() {
+
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
     
   } 
    

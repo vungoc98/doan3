@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Component, OnInit, Input, TemplateRef } from '@angular/core';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Http, Headers } from '@angular/http';
-
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 @Component({
   selector: 'app-chi-tiet-don-hang',
   templateUrl: './chi-tiet-don-hang.component.html',
@@ -33,9 +33,27 @@ export class ChiTietDonHangComponent implements OnInit {
 
   // Danh sach hang hoa cua don hang
   products = new Array();
-  constructor(private route: ActivatedRoute, private http: Http) { }
 
-  ngOnInit() { 
+  // Hien thi modal huy don hang
+  modalRef: BsModalRef;
+
+  // Ly do huy don hang
+  reason = '';
+
+  // xuat hang
+  array_object_container_products = new Array(); // Mang chua cac container-cac san pham tuong ung trong container co trong don hang
+
+  vidu = [1, 2, 3, 4];
+  constructor(private modalService: BsModalService, private route: ActivatedRoute, private http: Http, private router: Router) { }
+
+  ngOnInit() {
+
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
+
     // Quan ly don hang trong giao dien nha cung cap
     if (this.type_account == "ncc") {
       this.donNhapHang = true;
@@ -91,10 +109,95 @@ export class ChiTietDonHangComponent implements OnInit {
     .toPromise()
     .then(res => res.json())
     .then(resJson => {
-      for (var i = 0; i < resJson.length; i++) {
-        this.products[i] = resJson[i];
-      }
+      this.products = resJson;
     })
+  }
+
+  // Khi nhan vao button 'Xác nhận' => xac nhan don hang 
+  xacNhanDonHang() {
+    var url = "http://localhost:3000/confirmOrderId";
+    var headers = new Headers({'Content-Type': 'application/json'});
+    var body = JSON.stringify({'id': this.id});
+    this.http.post(url, body, { headers: headers })
+    .toPromise()
+    .then(res => res.json())
+    .then(resJson => { 
+      if (resJson == '1')
+        this.status = 'Chờ thanh toán';
+      else alert('Error!');
+    }) 
+  }
+
+  // Modal Huy don hang
+  openModalHuyDonHang(huydon: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(huydon);
+  }
+
+  // Xac nhan huy don
+  async huyDon() {
+    var url = "http://localhost:3000/cancelOrderId";
+    var headers = new Headers({'Content-Type': 'application/json'});
+    var body = JSON.stringify({'id': this.id, 'reason': this.reason.trim()});
+    await this.http.post(url, body, { headers: headers })
+    .toPromise()
+    .then(res => res.json())
+    .then(resJson => { 
+      if (resJson == '1')
+        this.status = 'Bị hủy';
+      else alert('Error!');
+    }) 
+    this.modalRef.hide();
+  }
+
+  // Khi nhan vao button 'Xuất hàng' => Hien thi modal de chon kho hang can xuat
+  async openModalXuatHang(xuathang: TemplateRef<any>) {
+    var url = "http://localhost:3000/exportOrderId";
+    var headers = new Headers({'Content-Type': 'application/json'});
+    var body = JSON.stringify({'id': this.id});
+    await this.http.post(url, body, { headers: headers })
+    .toPromise()
+    .then(res => res.json())
+    .then(resJson => { 
+      this.array_object_container_products = resJson; 
+    })  
+    this.modalRef = this.modalService.show(xuathang);  
+  }
+
+  // Chon kho hang de xuat hang cho don hang
+  // index: Chi so cua mang array_object_container_products
+  chonKhoXuatHang(index) {
+    var i = 0;
+    if (this.array_object_container_products[index].products.length != this.products.length) {
+       alert("Số lượng hàng hóa trong kho hiện không đủ để xuất hàng.");
+       return;
+    }
+    for(i = 0; i < this.array_object_container_products[index].products.length; i++) {
+      if (this.array_object_container_products[index].products[i].soluongconhan < this.array_object_container_products[index].products[i].soluongnhap) {
+        alert("Số lượng hàng hóa trong kho hiện không đủ để xuất hàng.");
+        break;
+      }
+    }
+    if (this.array_object_container_products[index].products.length == i) { 
+      var url = "http://localhost:3000/chooseContainerExport";
+      var headers = new Headers( { 'Content-Type': 'application/json' });
+      var body = JSON.stringify( { 'order_id': this.id, 'container_id': this.array_object_container_products[index].container.id, 'order_products': this.products } );
+      this.http.post(url, body, { headers: headers })
+      .toPromise()
+      .then(res => res.json())
+      .then(resJson => {
+        if (resJson == '1') {
+          this.modalRef.hide();
+          this.router.navigateByUrl("/quanlydonhang/dondathang/xemchitiet/" + this.id);
+          location.reload();
+        }
+        else alert("Error!");
+      })
+    }
+  }
+
+  closeModal() {
+    this.reason = ''; 
+    this.modalRef.hide(); 
   }
 
 }

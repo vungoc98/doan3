@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-danh-sach-kho-hang',
@@ -11,7 +12,7 @@ export class DanhSachKhoHangComponent implements OnInit {
   
   formSearchContainer: FormGroup;
   containers = new Array(); // mang chua danh sach kho hang
-  constructor(private http: Http, private fb: FormBuilder) { }
+  constructor(private http: Http, private fb: FormBuilder, private router: Router) { }
 
   async ngOnInit() {
   	this.containers.splice(0, this.containers.length);
@@ -19,6 +20,13 @@ export class DanhSachKhoHangComponent implements OnInit {
   		name:'',
   		code:''
   	});
+
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
+
   	const url = "http://localhost:3000/getMenuContainer";
   	const headers = new Headers({ 'Content-Type': 'application/json' });
   	await this.http.get(url, { headers: headers })

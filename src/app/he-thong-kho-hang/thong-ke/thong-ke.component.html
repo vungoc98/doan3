@@ -2,27 +2,54 @@
 <div class="container-fluid" style="height: 100vh;">
 	<div class="row">
 		<app-npp check="isShow2"></app-npp>
-		<div class="col-sm-10 col-sm-offset-2">
+		<div class="col-sm-10">
 			<div id="title">
 				<h3>Thống kê kho hàng</h3>		 
 			</div>
 			<hr> 
 			<div class="form-group" style="margin-top: 30px;">
+				<h4><b>Thông tin tổng quát</b></h4>
+	    		<br>
+    			<form style="margin-top: 0px;">
+    				<div class="row">
+    					<div class="col-sm-6">
+    						<label for="soluongchuyendenkho">Tổng số lượng nhập: </label>
+    						<input class="form-control" type="text" disabled="" id="soluongchuyendenkho" value="{{amount_import}}">
+    					</div>
+    					<div class="col-sm-6">
+    						<label for="soluongchuyenchodonhang">Tổng số lượng xuất: </label>
+    						<input class="form-control" type="text" disabled="" id="soluongchuyenchodonhang" value="{{amount_export}}">
+    					</div>
+    				</div>
+    				<div class="row">
+    					<div class="col-sm-6">
+    						<label for="soluongchuyenkho">Tổng số lượng còn hạn: </label>
+    						<input class="form-control" type="text" disabled="" id="soluongchuyenkho" value="{{amount_manufacturing}}">
+    					</div>
+    					<div class="col-sm-6">
+    						<label for="soluongconlaitrongkho">Số lượng hết hạn: </label>
+    						<input class="form-control" type="text" disabled="" id="soluongconlaitrongkho" value="{{amount_expiry}}">
+    					</div>
+    				</div> 
+    			</form> 
+    			<br>
+    			<h4><b>Danh sách hàng hóa trong kho</b></h4>
+    			<br>
 				<table class="table table-striped">
 					<thead>
-						<th>Mã kho</th>
-						<th>Tên kho</th>
-						<th>Số lượng nhập</th>
-						<th>Số lượng xuất</th>
-						<th>Còn lại</th>
+						<th>STT</th>
+						<th>Mã sản phẩm</th>
+						<th>Tên sản phẩm</th>
+						<th>Hình ảnh</th>
+						<th>Số lượng còn hạn</th>
 					</thead>
 					<tbody>
-						<tr> 
-							<td>1</td>
-							<td>Kho tổng</td>
-							<td>1000</td>
-							<td>22-02-2019</td>
-							<td>30-02-2019</td>
+						<tr *ngFor="let product of products; let i = index"> 
+							<td>{{i + 1}}</td>
+							<td>{{product.code}}</td>
+							<td>{{product.name}}</td>
+							<td><img src="assets/images/{{product.image}}" width="50px" height="50px"></td>
+							<td>{{product.amount}}</td>
 						</tr>
 					</tbody>
 				</table>

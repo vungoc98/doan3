@@ -29,7 +29,7 @@ export class TaoDonNhapHangComponent implements OnInit {
     { id: 300, name: 'order 3', checked: false },
     { id: 400, name: 'order 4', checked: false }
   ];
-  constructor(private modalService: BsModalService, private fb: FormBuilder, private http: Http, private route: Router) { }
+  constructor(private router: Router, private modalService: BsModalService, private fb: FormBuilder, private http: Http, private route: Router) { }
 
   ngOnInit() { 
 
@@ -55,6 +55,12 @@ export class TaoDonNhapHangComponent implements OnInit {
       ngay_tao: '',
       ngay_du_kien: ''
     });
+
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
 
   }
 

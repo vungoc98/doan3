@@ -29,6 +29,13 @@ export class CapNhatNhomHangHoaComponent implements OnInit {
       this.name1.replace("%20", " ");
       console.log(this.name1);
     })
+
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
+    
     // Tim thong tin san pham co id = this.id de gan gia tri cho form
     const url = "http://localhost:3000/getProductCategoryInfo";
     const headers = new Headers({ 'Content-Type': 'application/json' });

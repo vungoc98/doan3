@@ -45,7 +45,79 @@
 						<label>Ngày nhập: <span>{{import_date}}</span></label>
 						<br>
 						<br>
-						<label>Trạng thái: <span>{{status}}</span></label>
+						<label>Trạng thái: <span>{{status}}</span></label> 
+						<br *ngIf="donDatHang">
+						<br *ngIf="donDatHang">
+						<div *ngIf="donDatHang"> 
+							<button type="button" class="btn btn-primary" (click)="xacNhanDonHang();" style="margin-left: 35px;" *ngIf="status == 'Chờ xác nhận'">Xác nhận</button>
+							<button type="button" class="btn btn-primary" style="margin-left: 35px;" *ngIf="status == 'Đã thanh toán'" (click)="openModalXuatHang(xuathang)">Xuất hàng</button> 
+							<ng-template #xuathang style="width: 1000px;">
+								<div class="modal-header">
+									<h3 class="modal-title pull-left">Thông tin hàng hóa trong các kho</h3>
+								    <button type="button" class="close pull-right" (click)="closeModal();">
+								    	<span>&times;</span>
+								    </button>
+								</div>
+								
+							  	<div class="modal-body">  
+							  		<div *ngFor="let container_products of array_object_container_products; let i = index;"> 
+							  			<label for="{{i}}" style="color: orange;">{{i + 1}}.{{container_products.container.name}}</label> 
+							  			<button class="btn btn-primary" id="{{i}}" style="float: right;" (click)="chonKhoXuatHang(i);">Chọn kho</button>
+							  			<table class="table table-striped">
+											<thead>
+												<th>STT</th> 
+												<th>Mã sản phẩm</th>
+												<th>Tên sản phẩm</th>
+												<th>Số lượng nhập</th>
+												<th>Số lượng còn hạn</th>
+												<th>Tình trạng</th>
+											</thead>
+											<tbody>
+												<tr *ngFor="let product of container_products.products; let j = index"> 
+													<td>{{j + 1}}</td>
+													<td>{{product.code}}</td>
+													<td>{{product.name}}</td>
+													<td>{{product.soluongnhap}}</td>
+													<td>{{product.soluongconhan}}</td>
+													<td *ngIf="product.soluongnhap <= product.soluongconhan" style="color: blue;">Đủ</td>
+													<td *ngIf="product.soluongnhap > product.soluongconhan" style="color: red;">Thiếu</td>
+												</tr>
+											</tbody>
+										</table>
+										<br>
+							  		</div> 
+							  	</div>
+							  	 
+							  	<div class="modal-footer">
+							  		<button class="btn btn-default" (click)="closeModal();">Close</button>
+							  	</div>
+							 
+							</ng-template>
+							<button class="btn btn-danger" (click)="openModalHuyDonHang(huydon);" style="margin-left: 40px;" *ngIf="status != 'Đã giao' && status != 'Bị hủy'">Hủy đơn hàng</button>
+							<ng-template #huydon>
+							 
+								<div class="modal-header">
+									<h3 class="modal-title pull-left">Lý do hủy đơn hàng</h3>
+								    <button type="button" class="close pull-right" (click)="closeModal();">
+								    	<span>&times;</span>
+								    </button>
+								</div>
+							  	<div class="modal-body">    
+									<div class="form-group">
+										<div class="row" style="margin: 10px 0px 10px 0px;">
+										 	<label for="reason">Lý do:</label>
+										 	<textarea class="form-control" name="reason" id="reason" [(ngModel)]="reason" [ngModelOptions]="{standalone: true}" required="" style="height: 200px;"></textarea>
+										</div> 
+									</div>  
+							  	</div>
+							  	 
+							  	<div class="modal-footer">
+							  		<button class="btn btn-primary" (click)="huyDon();" [disabled]="reason.trim() == ''">Hủy đơn</button>
+							  		<button class="btn btn-default" (click)="closeModal();">Close</button>
+							  	</div>
+							 
+							</ng-template>
+						</div>
 					</div>
 					<br>
 					<div *ngIf="donNhapHang">
@@ -64,11 +136,6 @@
 						<br>
 						<br>
 						<label>Email nhà cung cấp: <span>{{email}}</span></label>
-						<br>
-						<br>
-						<div *ngIf="type_account=='ncc'" style="text-align: center;">
-							<button class="btn btn-primary">Xác nhận đơn hàng</button> <button class="btn btn-danger" style="margin-left: 5%">Hủy đơn hàng</button>
-						</div>
 						 
 					</div>
 					<div *ngIf="donDatHang">
@@ -88,7 +155,7 @@
 						<br>
 						<label>Email siêu thị: <span>{{email}}</span></label>
 						<br>
-						<br> 
+						<br>  
 					</div>		
   
 				</form>

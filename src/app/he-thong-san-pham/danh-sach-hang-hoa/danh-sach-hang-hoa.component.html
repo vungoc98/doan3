@@ -51,7 +51,7 @@
 							<th>Action</th>
 						</thead>
 						<tbody>
-							<tr *ngFor="let product of products; let i = index">
+							<tr *ngFor="let product of display_products; let i = index">
 								<td>{{i + 1}}</td>
 								<td>{{product.code}}</td>
 								<td>{{product.name}}</td>
@@ -66,7 +66,18 @@
 								</td> 
 							</tr>
 						</tbody>
-					</table>
+					</table> 
+   
+					<div style="text-align: right;" *ngIf="display_pages">
+						<ul class="pagination">
+							<li [ngClass]="{disabled: current_page == 1}"><a href="javascript:void(0);" (click)="changePage(current_page - 1);">&laquo;</a></li>
+							<!-- Mac dinh la trang dau tien --> 
+							<li  *ngFor="let i of range(products.length)"  [ngClass]="{active: current_page == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
+							<li [ngClass]="{disabled: current_page == total_page}"><a href="javascript:void(0);" (click)="changePage(current_page + 1);">&raquo;</a></li>
+						</ul>
+					</div>
+
+					 
 				</div>
 			</form>
 		</div>

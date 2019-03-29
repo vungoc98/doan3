@@ -81,8 +81,7 @@ const routesConfig: Routes = [
   { path: 'quanlydonhang/nhap_hang_dat_hang', component: QuanLyDonHangComponent },
   { path: 'quanlydonhang/:name/xemchitiet/:id', component: ChiTietDonHangComponent },
   { path: 'quanlynguoidung', component: DanhSachNhomNguoiDungComponent },
-  { path: 'thongtintaikhoan/:name', component: ThongTinTaiKhoanComponent },
-
+  { path: 'thongtintaikhoan/:name', component: ThongTinTaiKhoanComponent }, 
   // Nha cung cap
   { path: 'nhacungcap', component: GiaoDienChungComponent },
   { path: 'nhacungcap/danhsachsanpham', component: DanhSachSanPhamComponent },
@@ -146,7 +145,7 @@ const routesConfig: Routes = [
   imports: [
     BrowserModule,
     // AppRoutingModule
-    RouterModule.forRoot(routesConfig),
+    RouterModule.forRoot(routesConfig,{onSameUrlNavigation: 'reload'}),
     FormsModule,
     ReactiveFormsModule,
     TabsModule.forRoot(),

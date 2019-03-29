@@ -25,11 +25,14 @@ table thead, table tbody tr {
 	table-layout:fixed; 
 }
 table tbody td {
-	min-width: 200px;
+	min-width: 400px;
 	overflow-x: auto;
 }
 
 span {
 	color: blue;
 	font-size: 14px;
+}
+#xuathang {
+	width: 1200px;
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Http, Headers } from '@angular/http';
 import { AcountInfoService } from '../acount-info.service';
@@ -28,7 +28,7 @@ export class ThongTinTaiKhoanComponent implements OnInit {
   info: Login; // thong tin tai khoan
    
 
-  constructor(private acountInfo: AcountInfoService, private route: ActivatedRoute, private fb: FormBuilder, private http: Http) {
+  constructor(private router: Router, private acountInfo: AcountInfoService, private route: ActivatedRoute, private fb: FormBuilder, private http: Http) {
   }
 
   async ngOnInit() {
@@ -47,6 +47,12 @@ export class ThongTinTaiKhoanComponent implements OnInit {
       newPassword: '',
       againPassword: ''
     });
+
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
   
     this.info = await this.acountInfo.getInfomation();
    

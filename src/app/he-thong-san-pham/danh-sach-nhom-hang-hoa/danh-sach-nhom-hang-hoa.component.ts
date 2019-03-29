@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Http, Headers } from '@angular/http';
 import { ProductCategory} from './class-nhom-hang-hoa';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-danh-sach-nhom-hang-hoa',
@@ -12,13 +13,20 @@ export class DanhSachNhomHangHoaComponent implements OnInit {
   
   formCreateGroupProduct: FormGroup;
   product_categorys = new Array(); // chua danh sach nhom san pham
-  constructor(private fb: FormBuilder, private http: Http) { }
+  constructor(private fb: FormBuilder, private http: Http, private router: Router) { }
 
   async ngOnInit() {
     this.formCreateGroupProduct = this.fb.group({
       name: '',
       description: '',
     });
+
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
+    
     this.product_categorys.splice(0, this.product_categorys.length);
     // Lay danh sach nhom hang hoa
     const url = "http://localhost:3000/getMenuProduct_Category";

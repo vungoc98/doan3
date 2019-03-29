@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./tao-moi-kho-hang.component.css']
 })
 export class TaoMoiKhoHangComponent implements OnInit {
-  
+  check_username; // Kiem tra login hay logout
   formCreateNewContainer: FormGroup;
   constructor(private fb: FormBuilder, private http: Http, private router: Router) { }
 
@@ -19,6 +19,12 @@ export class TaoMoiKhoHangComponent implements OnInit {
   		address: '',
   		mobile: '',
   	})
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) {
+      this.check_username = false;
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    }
+    else this.check_username = true;
   }
 
   onSubmit(formCreateNewContainer) {

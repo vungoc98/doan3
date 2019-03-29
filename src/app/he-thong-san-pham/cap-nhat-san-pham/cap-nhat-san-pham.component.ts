@@ -33,6 +33,12 @@ export class CapNhatSanPhamComponent implements OnInit {
   	this.route.paramMap.subscribe((params: ParamMap) =>{
   		this.id = params.get('id');
   	})
+
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
     
     // Tim thong tin san pham co id = this.id de gan gia tri cho form
     var url = "http://localhost:3000/getProductInfo";

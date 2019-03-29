@@ -21,6 +21,13 @@ export class TaoMoiSanPhamComponent implements OnInit {
       image: '',
       description: ''
     });
+
+    // Kiem tra trang thai logout
+    var username = sessionStorage.getItem('username'); 
+    if (username == undefined) { 
+      this.router.navigateByUrl("", {skipLocationChange: true});  
+    } 
+
     // Lay thong tin nhom san pham
     const url = "http://localhost:3000/getProduct_Type";
     

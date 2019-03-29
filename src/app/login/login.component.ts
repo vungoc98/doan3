@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
           // sessionStorage.setItem('email', this.thongTinTaiKhoan.email);
           // sessionStorage.setItem('mobile', this.thongTinTaiKhoan.mobile);
           console.log(this.thongTinTaiKhoan);
-          this.router.navigate(['/nhaphanphoi']);
+          this.router.navigate(['/nhaphanphoi'],{ skipLocationChange: true });
          // console.log("Lay username: " + localStorage.getItem('username'));
           //this.router.navigateByUrl("/nhaphanphoi");
         }
