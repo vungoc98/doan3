@@ -87,6 +87,7 @@ const routesConfig: Routes = [
   { path: 'nhacungcap/danhsachsanpham', component: DanhSachSanPhamComponent },
   { path: 'nhacungcap/quanlydonhang', component: NccQuanLyDonHangComponent },
   { path: 'nhacungcap/quanlydonhang/xemchitiet/:id', component: NccThongTinDonHangComponent },
+  { path: 'nhacungcap/danhsachsanpham/themsanpham', component: ThemSanPhamComponent },
 
   // Sieu thi
   { path: 'sieuthi', component: SieuThiGiaoDienChungComponent },

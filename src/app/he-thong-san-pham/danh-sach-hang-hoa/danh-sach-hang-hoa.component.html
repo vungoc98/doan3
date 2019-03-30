@@ -75,8 +75,7 @@
 							<li  *ngFor="let i of range(products.length)"  [ngClass]="{active: current_page == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
 							<li [ngClass]="{disabled: current_page == total_page}"><a href="javascript:void(0);" (click)="changePage(current_page + 1);">&raquo;</a></li>
 						</ul>
-					</div>
-
+					</div> 
 					 
 				</div>
 			</form>

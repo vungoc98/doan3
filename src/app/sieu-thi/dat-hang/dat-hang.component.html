@@ -2,7 +2,7 @@
 <div class="container-fluid" style="height: 100vh;">
 	<div class="row">
 		<app-sieu-thi></app-sieu-thi>
-		<div class="col-sm-10 col-sm-offset-2">
+		<div class="col-sm-10">
 			<div id="title">
 				<h3>Tạo đơn hàng</h3>		 
 			</div>
@@ -19,12 +19,12 @@
 							 
 								<div class="modal-header">
 									<h3 class="modal-title pull-left">Danh sách hàng hóa của nhà cung cấp</h3>
-								    <button type="button" class="close pull-right" (click)="modalRef.hide()">
+								    <button type="button" class="close pull-right" (click)="checkbox();">
 								    	<span>&times;</span>
 								    </button>
 								</div>
 							  	<div class="modal-body">
-									<form (ngSubmit)="onSubmit();" [formGroup]="formSearch">
+									<form (ngSubmit)="onSearch(formSearch);" [formGroup]="formSearch">
 										<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
 										<div class="form-group" style="margin-top: 20px;">
 											<div class="row">
@@ -35,8 +35,10 @@
 													<input type="text" placeholder="Nhập mã hàng hóa..." formControlName="code" class="form-control">
 												</div>
 												<div class="col-sm-3">
-													<select class="form-control">
-														<option selected="">Chọn loại hàng hóa</option>
+													<select class="form-control" required=""  [(ngModel)]="selectedType" [ngModelOptions]="{standalone: true}">
+														<option value="" disabled selected hidden>Chọn nhóm sản phẩm</option>
+														<option *ngFor="let type of product_type" value="{{type.name}}">{{type.name}}</option> 
+														<option value="">Không chọn nhóm</option> 
 													</select>
 												</div>
 												<div class="col-sm-3">
@@ -52,34 +54,34 @@
 												<thead>
 													<th>STT</th>
 													<th>Mã sản phẩm</th>
-													<th>Tên sản phẩm</th>
-													<th>Nhóm sản phẩm</th>
-													<th>Mô tả</th>
+													<th>Tên sản phẩm</th> 
 													<th>Ảnh</th>
 													<th>Giá</th>
 													<th>Action</th> 
 												</thead>
 												<tbody>
-													<tr>
-														<td>1</td>
-														<td>laa</td>
-														<td>rau muong</td>
-														<td>1</td>
-														<td>Ngon, bổ, rẻ</td>
-														<td>Link ảnh</td>
-														<td>70000</td>
-														<td class="form-check">
-															<input type="checkbox" class="form-check-input">
+													<tr  class="form-check" *ngFor="let product of display_products; let i = index">
+														<td>{{i + 1}}</td>
+														<td>{{product.code}}</td>
+														<td>{{product.name}}</td> 
+														<td><img src="../assets/images/{{product.image}}" style="max-height: 50px; max-width: 50px;"></td> 
+														<td>{{product.price}}</td>
+														<td> 
+															<input class="form-check-input" type="checkbox" [(ngModel)]="product.checked" [ngModelOptions]="{standalone: true}" mdbInput>
 														</td>
 													</tr> 
 												</tbody>
-											</table> 
+											</table>  
 										</div>
-									</form>
-									<!-- <div class="form-check" *ngFor="let s of subjects">
-										<input type="checkbox" class="form-check-input" [(ngModel)]="s.checked"  name="radios" mdbInput value="ncc2" >
-										<label class="form-check-label">{{s.id}}</label>
-									</div> -->
+										<div style="text-align: right;" *ngIf="display_pages">
+											<ul class="pagination">
+												<li [ngClass]="{disabled: current_page == 1}"><a href="javascript:void(0);" (click)="changePage(current_page - 1);" *ngIf="current_page != 1">&laquo;</a></li>
+												<!-- Mac dinh la trang dau tien --> 
+												<li  *ngFor="let i of range(products_copy.length)"  [ngClass]="{active: current_page == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
+												<li [ngClass]="{disabled: current_page == total_page}"><a href="javascript:void(0);" (click)="changePage(current_page + 1);" *ngIf="current_page != total_page">&raquo;</a></li>
+											</ul>
+										</div>   
+									</form> 
 							  	</div>
 							  	 
 							  	<div class="modal-footer">
@@ -103,73 +105,49 @@
 							<th>Giá</th>
 						</thead>
 						<tbody>
-							<tr>
-								<td>1</td>
-								<td>bacda</td>
-								<td>Kho tổng</td>
-								<td>Rất ngon</td>
-								<td>Hà Nội</td>
+							<tr *ngFor="let product of products_order; let i = index;">
+								<td>{{i + 1}}</td>
+								<td>{{product.code}}</td>
+								<td>{{product.name}}</td>
+								<td>{{product.description}}</td>
+								<td><img src="assets/images/{{product.image}}" style="width: 50px; height: 50px;"></td>
 								<td>
-									<input type="text" name="">
+									<input type="text" name="" [(ngModel)]="product.amount" [ngModelOptions]="{standalone: true}" (change)="changeListner($event)">
 								</td>
 								<td>
-									 <input type="text" name="">
+									<input type="text" name="" value="{{product.price * product.amount}}" disabled="">
 								</td>
 							</tr>
 						</tbody>
 					</table>
-
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Tổng số lượng:</label>
-								<div class="input-group">
-									<span class="input-group-addon">
-										<i class="glyphicon glyphicon-usd"></i>
-									</span>
-									<input disabled="" class="form-control" type="text" name="">
+					<form [formGroup]="formCreateOrder" (ngSubmit)="createOrder(formCreateOrder);">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Tổng số lượng:</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-usd"></i>
+										</span>
+										<input disabled="" class="form-control" type="text" name="" value="{{total_amount}}" formControlName="total_amount">
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Tổng tiền:</label>
-								<div class="input-group">
-									<span class="input-group-addon">
-										<i class="glyphicon glyphicon-usd"></i>
-									</span>
-									<input disabled="" class="form-control" type="text" name="">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Tổng tiền:</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-usd"></i>
+										</span>
+										<input disabled="" class="form-control" type="text" name="" value="{{total_price}}" formControlName="total_price">
+									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Ngày tạo đơn:</label>
-								<div class="input-group">
-									<span class="input-group-addon">
-										<i class="glyphicon glyphicon-time"></i>
-									</span>
-									<input type="text" name="" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }">
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label>Ngày dự kiến giao hàng:</label>
-								<div class="input-group">
-									<span class="input-group-addon">
-										<i class="glyphicon glyphicon-time"></i>
-									</span>
-									<input type="text" name="" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }">
-								</div>
-							</div>
-						</div>
-					</div>
-					<br><br>
-					<button (click)="taoDonHang();" class="btn btn-primary">Tạo đơn hàng</button>
+						</div> 
+						<br><br>
+						<button (click)="taoDonHang();" class="btn btn-primary">Tạo đơn hàng</button>
+					</form>
 				</form>
 			</div>
 		</div>

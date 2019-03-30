@@ -54,7 +54,7 @@ export class NhaPhanPhoiComponent implements OnInit {
 
     // Kiem tra trang thai logout
     var username = sessionStorage.getItem('username'); 
-    if (username == undefined) { 
+    if (typeof username == undefined) { 
       this.router.navigateByUrl("", {skipLocationChange: true});  
     } 
     

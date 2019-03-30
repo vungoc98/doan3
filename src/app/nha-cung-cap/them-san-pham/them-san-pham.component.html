@@ -3,24 +3,26 @@
 <div class="container-fluid" style="height: 100vh;">
 	<div class="row">
 		<app-sign-in></app-sign-in>
-		<div class="col-sm-10 col-sm-offset-2">
+		<div class="col-sm-10">
 			<div id="title">
 				<h3>Lựa chọn sản phẩm</h3>		 
 			</div>
 			<hr> 
-			<form (ngSubmit)="onSubmit();" [formGroup]="formSearch">
+			<form (ngSubmit)="onSearch(formSearch);" [formGroup]="formSearch">
 				<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
 				<div class="form-group" style="margin-top: 20px;">
 					<div class="row">
 						<div class="col-sm-3">
-							<input type="text" placeholder="Nhập tên hàng hóa..." formControlName="name">
+							<input type="text" placeholder="Nhập tên hàng hóa..." class="form-control" formControlName="name">
 						</div>
 						<div class="col-sm-3">
-							<input type="text" placeholder="Nhập mã hàng hóa..." formControlName="code">
+							<input type="text" placeholder="Nhập mã hàng hóa..." class="form-control" formControlName="code">
 						</div>
 						<div class="col-sm-3">
-							<select class="form-control">
-								<option selected="">Chọn loại hàng hóa</option>
+							<select class="form-control" required=""  [(ngModel)]="selectedType" [ngModelOptions]="{standalone: true}">
+								<option value="" disabled selected hidden>Chọn nhóm sản phẩm</option>
+								<option *ngFor="let type of product_type" value="{{type}}">{{type}}</option> 
+								<option value="">{{type}}</option> 
 							</select>
 						</div>
 						<div class="col-sm-3">
@@ -28,36 +30,47 @@
 						</div>
 						 
 					</div> 
-				</div>
- 				
- 				<!-- Bang chua danh sach hang hoa da co cua nha cung cap -->
+				</div> 
+ 				<!-- Bang chua danh sach hang hoa chua co cua nha cung cap -->
 				<div class="form-group" style="margin-top: 30px;">
 					<table class="table table-striped">
 						<thead>
 							<th>STT</th>
 							<th>Mã sản phẩm</th>
 							<th>Tên sản phẩm</th>
-							<th>Nhóm sản phẩm</th>
+							<th>Ảnh</th>
 							<th>Mô tả</th>
-							<th>Giá</th>
+							<th>Tên nhóm sản phẩm</th> 
 							<th>Action</th> 
 						</thead>
 						<tbody>
-							<tr>
-								<td>1</td>
-								<td>laa</td>
-								<td>rau muong</td>
-								<td>1</td>
-								<td>Ngon, bổ, rẻ</td>
-								<td>70000</td>
+							<tr *ngFor="let product of display_products; let i = index;">
+								<td>{{ i + 1 }}</td>
+								<td>{{ product.code }}</td>
+								<td>{{ product.name }}</td>
+								<td><img src="assets/images/{{ product.image }}" width="50px;" height="50px;"></td>
+								<td>{{ product.description }}</td>
+								<td>{{ product.name_category }}</td> 
 								<td>
-									<button>Xóa</button>
+									<input class="form-check-input" type="checkbox" [(ngModel)]="product.checked" [ngModelOptions]="{standalone: true}" mdbInput>
 								</td>
 							</tr> 
 						</tbody>
 					</table>
 				</div>
-			</form>
+				<div style="text-align: right;" *ngIf="display_pages">
+					<ul class="pagination">
+						<li [ngClass]="{disabled: current_page == 1}"><a href="javascript:void(0);" (click)="changePage(current_page - 1);" *ngIf="current_page != 1">&laquo;</a></li>
+						<!-- Mac dinh la trang dau tien --> 
+						<li  *ngFor="let i of range(array_products_copy.length)"  [ngClass]="{active: current_page == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
+						<li [ngClass]="{disabled: current_page == total_page}"><a href="javascript:void(0);" (click)="changePage(current_page + 1);" *ngIf="current_page != total_page">&raquo;</a></li>
+					</ul>
+				</div>   
+				<div class="modal-footer">
+					<button class="btn btn-primary" (click)="insertProduct();">Lưu</button>
+					<button class="btn btn-danger" style="margin-left: 2%" (click)="addProduct=!addProduct">Hủy</button>
+				</div> 
+			</form> 
 		</div>
 	</div>
 </div>

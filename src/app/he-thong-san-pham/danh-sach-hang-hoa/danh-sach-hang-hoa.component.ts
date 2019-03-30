@@ -10,8 +10,6 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
   styleUrls: ['./danh-sach-hang-hoa.component.css']
 })
 export class DanhSachHangHoaComponent implements OnInit {
-  
-  display_products = []; // Chua san pham hien thi tung trang, moi trang hien thi 10 san pham
   products = new Array(); // Chua tat ca cac san pham cua nha phan phoi
   formSearch: FormGroup; // form tim kiem san pham
   selectedType = ""; // tim kiem theo nhom san pham
@@ -20,6 +18,7 @@ export class DanhSachHangHoaComponent implements OnInit {
   page; // Chi so trang
   display_pages: boolean = false; // Co hien trang hay khong 
   current_page = 1; // Set active cho cac page
+  display_products = []; // Chua san pham hien thi tung trang, moi trang hien thi 10 san pham
   constructor(private http: Http, private fb: FormBuilder, private route: ActivatedRoute, private router: Router) { }
 
   async ngOnInit() { 
@@ -76,14 +75,12 @@ export class DanhSachHangHoaComponent implements OnInit {
     // Lay so trang
     this.route.queryParams.subscribe((params: ParamMap) => {
       this.page = params['page'];  
-    })
-
-     
+    }) 
 
     // Kiem tra nguoi dung co bam chon trang khac trang 1 ( tu 2 den ...)
     if (this.page != undefined) {  
       var k = 0;
-      for (var i = (this.page - 1) * 10; i < ((this.page * 10) - 1) && i < this.products.length; i++) {
+      for (var i = (this.page - 1) * 10; i < (this.page * 10) && i < this.products.length; i++) {
         this.display_products[k] = this.products[i];
         k++;
       }
@@ -109,14 +106,13 @@ export class DanhSachHangHoaComponent implements OnInit {
     await this.http.post(url, body, { headers: headers })
     .toPromise()
     .then(res => res.json())
-    .then(resJson => {
-      console.log(resJson.length);
+    .then(resJson => { 
         for (var i = 0; i < resJson.length; i++) {
 
           this.display_products[i] = new Product(resJson[i].id, resJson[i].code, resJson[i].name, 
             resJson[i].price, resJson[i].description,
           "assets/images/" + resJson[i].image, resJson[i].product_category_id, resJson[i].create_date, resJson[i].update_date);
-           console.log(this.products[i]);
+           
         } 
     })
 
@@ -149,7 +145,7 @@ export class DanhSachHangHoaComponent implements OnInit {
     else { 
       this.router.navigate(['/hethongsanpham/danhsachsanpham'], {queryParams: {page: page}}); 
       var k = 0;
-      for (var i = (page - 1) * 10; i < ((page * 10) - 1) && i < this.products.length; i++) {
+      for (var i = (page - 1) * 10; i < (page * 10) && i < this.products.length; i++) {
         this.display_products[k] = this.products[i];
         k++;
       }  

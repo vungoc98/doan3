@@ -12,7 +12,7 @@ export class SieuThiGiaoDienChungComponent implements OnInit {
   constructor(private loginService: LoginService) { }
 
   ngOnInit() {
-  	console.log(this.loginService.getThongTinTaiKhoan());
+  	// console.log(this.loginService.getThongTinTaiKhoan());
   }
 
 }

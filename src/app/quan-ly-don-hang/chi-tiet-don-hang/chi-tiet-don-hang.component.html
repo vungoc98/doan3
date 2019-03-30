@@ -49,8 +49,8 @@
 						<br *ngIf="donDatHang">
 						<br *ngIf="donDatHang">
 						<div *ngIf="donDatHang"> 
-							<button type="button" class="btn btn-primary" (click)="xacNhanDonHang();" style="margin-left: 35px;" *ngIf="status == 'Chờ xác nhận'">Xác nhận</button>
-							<button type="button" class="btn btn-primary" style="margin-left: 35px;" *ngIf="status == 'Đã thanh toán'" (click)="openModalXuatHang(xuathang)">Xuất hàng</button> 
+							<button type="button" class="btn btn-primary" (click)="xacNhanDonHang();" style="margin-left: 35px;" *ngIf="status == 'Chờ xác nhận' && type_account == 'npp'">Xác nhận</button>
+							<button type="button" class="btn btn-primary" style="margin-left: 35px;" *ngIf="status == 'Đã thanh toán' && type_account == 'npp'" (click)="openModalXuatHang(xuathang)">Xuất hàng</button> 
 							<ng-template #xuathang style="width: 1000px;">
 								<div class="modal-header">
 									<h3 class="modal-title pull-left">Thông tin hàng hóa trong các kho</h3>

@@ -23,12 +23,12 @@ export class TaoDonNhapHangComponent implements OnInit {
   searchProducts = new Array(); // chua danh sach san pham tim kiem
   total_amount = 0;
   total_price = 0;
-  subjects = [
-    { id: 100, name: 'order 1', checked: false },
-    { id: 200, name: 'order 2', checked: false },
-    { id: 300, name: 'order 3', checked: false },
-    { id: 400, name: 'order 4', checked: false }
-  ];
+  // subjects = [
+  //   { id: 100, name: 'order 1', checked: false },
+  //   { id: 200, name: 'order 2', checked: false },
+  //   { id: 300, name: 'order 3', checked: false },
+  //   { id: 400, name: 'order 4', checked: false }
+  // ];
   constructor(private router: Router, private modalService: BsModalService, private fb: FormBuilder, private http: Http, private route: Router) { }
 
   ngOnInit() { 
@@ -69,7 +69,7 @@ export class TaoDonNhapHangComponent implements OnInit {
     this.total_amount = 0;
     this.total_price = 0;
      for (var i = 0; i < this.imports.length; i++) { 
-        this.imports[i].prices = parseInt(this.imports[i].price) * this.imports[i].amount
+        this.imports[i].prices = parseInt(this.imports[i].price) * this.imports[i].amount;
         this.total_price += this.imports[i].prices;  
         this.total_amount += parseInt(this.imports[i].amount); 
      
@@ -142,16 +142,18 @@ export class TaoDonNhapHangComponent implements OnInit {
   }
 
   // Dong popup them san pham nhap 
-  checkbox() {
-
+  checkbox() { 
     // Cac phan tu trong mang imports phai duoc giu nguyen => so luong checked = true trong products cung phai giu nguyen
-    for (var i = 0; i < this.imports.length; i++) {
-      for (var j = 0; j < this.products.length; j++) {
-        if (this.imports[i].id == this.products[j].id) { 
-          this.products[j].checked = true;
+    for (var i = 0; i < this.products.length; i++) {
+      for (var j = 0; j < this.imports.length; j++) {
+        if (this.imports[j].id == this.products[i].id) { 
+          this.products[i].checked = true;
           break;
         }
-      }   
+      }  
+      if (j == this.imports.length) {
+        this.products[i].checked = false;
+      } 
     }    
   	this.modalRef.hide(); 
   }
@@ -187,8 +189,7 @@ export class TaoDonNhapHangComponent implements OnInit {
         this.searchProducts[i] = resJson[i];
         for (var j = 0; j < this.imports.length; j++) {
           if (this.imports[j].id == this.searchProducts[i].id) {
-            this.searchProducts[i].checked = true;
-            
+            this.searchProducts[i].checked = true; 
           }
         }
       }
@@ -203,8 +204,7 @@ export class TaoDonNhapHangComponent implements OnInit {
           this.products[j] = tmp;
           break;
         }
-      }
-      
+      } 
     }   
 	}
 

@@ -3,23 +3,24 @@
 <div class="container-fluid" style="height: 100vh;">
 	<div class="row">
 		<app-sieu-thi></app-sieu-thi>
-		<div class="col-sm-10 col-sm-offset-2">
+		<div class="col-sm-10">
 			<div id="title">
 				<h3>Danh sách đơn hàng</h3>		 
 			</div>
 			<hr> 
 
-			<form (ngSubmit)="onSubmit();" [formGroup]="formSearch">
+			<form (ngSubmit)="onSearch(formSearch);" [formGroup]="formSearch">
 				<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
 				<div class="form-group" style="margin-top: 20px;">
 					<div class="row">
 						<div class="col-sm-3">
-							<input type="text" placeholder="Nhập mã đơn hàng..." class="form-control" formControlName="name">
+							<input type="text" placeholder="Nhập mã đơn hàng..." class="form-control" formControlName="code">
 						</div>
 						 
 						<div class="col-sm-3">
-							<select class="form-control">
-								<option selected="">Chọn trạng thái đơn hàng</option>
+							<select class="form-control" required=""  [(ngModel)]="selectedType" [ngModelOptions]="{standalone: true}">
+								<option value="" disabled selected hidden>Chọn trạng thái đơn hàng</option>
+								<option *ngFor="let type of order_type" value="{{type}}">{{type}}</option>  
 							</select>
 						</div>
 						<div class="col-sm-3">
@@ -35,29 +36,26 @@
 						<thead>
 							<th>STT</th>
 							<th>Mã đơn hàng</th>
-							<th>Số lượng</th>
+							<th>Tổng số lượng</th>
 							<th>Tổng tiền</th>
 							<th>Ngày tạo đơn</th>
-							<th>Ngày xuât hàng</th>
+							<th>Ngày xuất hàng</th>
 							<th>Trạng thái</th>
 							<th>Action</th>
 						</thead>
 						<tbody>
-							<tr>
-								<td>1</td>
-								<td>xyz</td>
-								<td>200</td>
-								<td>10000000</td>
-								<td>22/02/2019</td>
-								<td>24/02/2019</td>
+							<tr *ngFor="let order of orders; let i = index;">
+								<td>{{i + 1}}</td>
+								<td>{{order.code}}</td>
+								<td>{{order.amount_total}}</td>
+								<td>{{order.price_total}}</td>
+								<td>{{order.order_date}}</td>
+								<td>{{order.export_date}}</td>
+								<td>{{order.status}}</td>
 								<td>
-									<button class="btn btn-danger">Chờ xác nhận</button>
-								</td>
-								<td>
-									<button class="btn btn-primary" routerLink="/sieuthi/quanlydonhang/xemchitiet/{{1}}">Xem chi tiết</button>
+									<button class="btn btn-primary" routerLink="/sieuthi/quanlydonhang/xemchitiet/{{order.id}}">Xem chi tiết</button>
 								</td>
 							</tr> 
-
 						</tbody>
 					</table>
 				</div>
