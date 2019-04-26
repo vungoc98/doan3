@@ -1,0 +1,70 @@
+<app-header-npp name="npp"></app-header-npp>
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp check="isShow2"></app-npp>
+		<div class="col-sm-10">
+			<div style="margin-top: 30px;">
+				<ol class="breadcrumb">
+				  <li><a routerLink="/nhaphanphoi" style="text-decoration: none;">
+				  	<i class="glyphicon glyphicon-home"></i>Trang chủ</a></li> 
+				  <li class="active">Thống kê</li> 
+				</ol>		 
+			</div> 
+			<div class="form-group" style="margin-top: 30px;">
+				<h4><b>Thông tin tổng quát</b></h4>
+	    		<br>
+    			<form style="margin-top: 0px;">
+    				<div class="row">
+    					<div class="col-sm-6">
+    						<label for="soluongchuyendenkho">Tổng số lượng nhập: </label>
+    						<input class="form-control" type="text" disabled="" id="soluongchuyendenkho" value="{{amount_import}}">
+    					</div>
+    					<div class="col-sm-6">
+    						<label for="soluongchuyenchodonhang">Tổng số lượng xuất: </label>
+    						<input class="form-control" type="text" disabled="" id="soluongchuyenchodonhang" value="{{amount_export}}">
+    					</div>
+    				</div>
+    				<div class="row">
+    					<div class="col-sm-6">
+    						<label for="soluongchuyenkho">Tổng số lượng còn hạn: </label>
+    						<input class="form-control" type="text" disabled="" id="soluongchuyenkho" value="{{amount_manufacturing}}">
+    					</div>
+    					<div class="col-sm-6">
+    						<label for="soluongconlaitrongkho">Số lượng hết hạn: </label>
+    						<input class="form-control" type="text" disabled="" id="soluongconlaitrongkho" value="{{amount_expiry}}">
+    					</div>
+    				</div> 
+    			</form> 
+    			<br>
+    			<h4><b>Danh sách hàng hóa trong kho</b></h4>
+    			<br>
+				<table class="table table-striped">
+					<thead>
+						<th>STT</th>
+						<th>Mã sản phẩm</th>
+						<th>Tên sản phẩm</th>
+						<th>Hình ảnh</th>
+						<th>Số lượng còn hạn</th>
+					</thead>
+					<tbody>
+						<tr *ngFor="let product of display_products; let i = index"> 
+							<td>{{i + 1}}</td>
+							<td>{{product.code}}</td>
+							<td>{{product.name}}</td>
+							<td><img src="assets/images/{{product.image}}" width="50px" height="50px"></td>
+							<td>{{product.amount}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div style="text-align: right;" *ngIf="display_pages">
+						<ul class="pagination">
+							<li *ngIf="current_page != 1"><a href="javascript:void(0);" (click)="changePage(current_page - 1);">&laquo;</a></li>
+							<!-- Mac dinh la trang dau tien --> 
+							<li *ngFor="let i of range(products.length)"  [ngClass]="{active: current_page == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
+							<li *ngIf="current_page != total_page"><a href="javascript:void(0);" (click)="changePage(current_page + 1);">&raquo;</a></li>
+						</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

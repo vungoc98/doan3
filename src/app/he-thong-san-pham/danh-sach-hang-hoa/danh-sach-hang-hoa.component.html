@@ -1,0 +1,87 @@
+<app-header-npp name="npp"></app-header-npp>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp check="isShow1"></app-npp>
+		<div class="col-sm-10">
+			<div style="margin-top: 30px;">
+				<ol class="breadcrumb">
+				  <li><a routerLink="/nhaphanphoi" style="text-decoration: none;">
+				  	<i class="glyphicon glyphicon-home"></i>Trang chủ</a></li>
+				  <li class="active">Danh sách sản phẩm</li> 
+				</ol>		 
+			</div>  
+			<!-- Chua cac thanh tim kiem san pham theo ten, ma, nhom san pham -->
+			<form style="border:1px solid gray; padding: 10px;" [formGroup]="formSearch" 
+			(ngSubmit)="onSearch(formSearch);">
+				 
+				<div class="form-group" style="margin-top: 20px;">
+					<div class="row">
+						<div class="col-sm-3">
+							<input type="text" formControlName="name" placeholder="Nhập tên hàng hóa..." class="form-control">	
+						</div>
+						<div class="col-sm-3">
+							<input type="text" formControlName="code" placeholder="Nhập mã hàng hóa..." class="form-control">
+						</div>
+						<div class="col-sm-3">
+							<select class="form-control" required=""  [(ngModel)]="selectedType" [ngModelOptions]="{standalone: true}">
+								<option value="" disabled selected hidden>Chọn nhóm sản phẩm</option>
+								<option *ngFor="let type of product_type" value="{{type}}">{{type}}</option> 
+							</select>	
+						</div>
+						<div class="btn-group">
+							<div class="col-sm-3">
+								<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+							</div>
+						</div>
+					</div>	 
+				</div>
+
+				<!-- Hien thi danh sach san pham -->
+				<div class=".table-responsive" style="margin-top: 30px;">
+					<table class="table table-striped">
+						<thead  >
+						 
+							<th>STT</th>
+							<th>Mã sản phẩm</th>
+							<th>Tên sản phẩm</th>
+							<th>Nhóm sản phẩm</th>
+							<th>Mô tả</th>
+							<th>Ảnh</th>
+							<th>Giá</th>
+							<th>Ngày tạo</th>
+							<th>Ngày cập nhật</th>
+							<th>Action</th>
+						</thead>
+						<tbody>
+							<tr *ngFor="let product of display_products; let i = index">
+								<td>{{i + 1}}</td>
+								<td>{{product.code}}</td>
+								<td>{{product.name}}</td>
+								<td>{{product.product_category_id}}</td>
+								<td>{{product.description}}</td>
+								<td><img src="assets/images/{{product.image}}" style="max-height: 50px; max-width: 50px;"></td>
+								<td>{{product.price}}</td>
+								<td>{{product.create_date}}</td>
+								<td>{{product.update_date}}</td>
+								<td>
+									<a type="submit" class="btn btn-primary" routerLink="/hethongsanpham/danhsachsanpham/capnhatsanpham/{{product.id}}" >Cập nhật</a>
+								</td> 
+							</tr>
+						</tbody>
+					</table> 
+   
+					<div style="text-align: right;" *ngIf="display_pages">
+						<ul class="pagination">
+							<li *ngIf="current_page != 1"><a href="javascript:void(0);" (click)="changePage(current_page - 1);">&laquo;</a></li>
+							<!-- Mac dinh la trang dau tien --> 
+							<li *ngFor="let i of range(products.length)"  [ngClass]="{active: current_page == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
+							<li *ngIf="current_page != total_page"><a href="javascript:void(0);" (click)="changePage(current_page + 1);">&raquo;</a></li>
+						</ul>
+					</div> 
+					 
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

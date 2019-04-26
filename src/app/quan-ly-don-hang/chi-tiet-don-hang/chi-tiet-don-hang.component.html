@@ -1,0 +1,215 @@
+<div *ngIf="type_account=='npp'">
+	<app-header-npp name="npp"></app-header-npp>
+</div>
+<div *ngIf="type_account=='ncc'">
+	<app-header-npp name="ncc"></app-header-npp>
+</div>
+<div *ngIf="type_account=='sieuthi'">
+	<app-header-npp name="sieuthi"></app-header-npp>
+</div>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<div *ngIf="type_account=='npp'">
+			<app-npp check="isShow3"></app-npp>
+		</div>
+		<div *ngIf="type_account=='ncc'">
+			<app-sign-in></app-sign-in>
+		</div>
+		<div *ngIf="type_account=='sieuthi'">
+			<app-sieu-thi></app-sieu-thi>
+		</div>
+		<div class="col-sm-10">
+			<div style="margin-top: 30px;">
+				<ol class="breadcrumb" *ngIf="type_account == 'npp'">
+				  <li><a routerLink="/nhaphanphoi" style="text-decoration: none;">
+				  	<i class="glyphicon glyphicon-home"></i>Trang chủ</a></li>
+				  <li class="active"><a routerLink="/quanlydonhang/nhap_hang_dat_hang" style="text-decoration: none;">Danh sách đơn hàng</a></li>
+				  <li class="active">Thông tin đơn hàng {{id}}</li> 
+				</ol>	
+				<ol class="breadcrumb" *ngIf="type_account == 'ncc'">
+				  <li><a routerLink="/nhacungcap" style="text-decoration: none;">
+				  	<i class="glyphicon glyphicon-home"></i>Trang chủ</a></li>
+				  <li class="active"><a routerLink="/nhacungcap/quanlydonhang" style="text-decoration: none;">Danh sách đơn hàng</a></li>
+				  <li class="active">Thông tin đơn hàng {{id}}</li> 
+				</ol>	
+				<ol class="breadcrumb" *ngIf="type_account == 'sieuthi'">
+				  <li><a routerLink="/sieuthi" style="text-decoration: none;">
+				  	<i class="glyphicon glyphicon-home"></i>Trang chủ</a></li>
+				  <li class="active"><a routerLink="/sieuthi/quanlydonhang" style="text-decoration: none;">Danh sách đơn hàng</a></li>
+				  <li class="active">Thông tin đơn hàng {{id}}</li> 
+				</ol>		 
+			</div>  
+			<div class="col-sm-4">
+				<!-- Form tao moi nhom san pham -->
+				<form>
+					<div>
+						<h4><b>THÔNG TIN ĐƠN HÀNG</b></h4>
+						<hr>
+						<label>Mã đơn: <span>{{order_code}}</span></label> 
+						<br>
+						<br>
+						<label>Tổng số lượng: <span>{{amount_total}}</span></label>
+						<br>
+						<br>
+						<label>Tổng tiền: <span>{{price_total}}</span></label>
+						<br>
+						<br>
+						<label>Ngày tạo đơn: <span>{{order_date}}</span></label>
+						<br>
+						<br>
+						<label>Ngày nhập: <span>{{import_date}}</span></label>
+						<br>
+						<br>
+						<label>Trạng thái: <span>{{status}}</span></label> 
+						<br *ngIf="donDatHang">
+						<br *ngIf="donDatHang">
+						<div *ngIf="donDatHang"> 
+							<button type="button" class="btn btn-primary" (click)="xacNhanDonHang();" style="margin-left: 30px;" *ngIf="status == 'Chờ xác nhận' && type_account == 'npp'">Xác nhận</button>
+							<button type="button" class="btn btn-primary" (click)="xacNhanDonHang();" style="margin-left: 30px;" *ngIf="status == 'Chờ thanh toán' && type_account == 'sieuthi'">Thanh toán</button>
+							<button type="button" class="btn btn-primary" style="margin-left: 35px;" *ngIf="status == 'Đã thanh toán' && type_account == 'npp'" (click)="openModalXuatHang(xuathang)">Xuất hàng</button> 
+							<ng-template #xuathang style="width: 1000px;">
+								<div class="modal-header">
+									<h3 class="modal-title pull-left">Thông tin hàng hóa trong các kho</h3>
+								    <button type="button" class="close pull-right" (click)="closeModal();">
+								    	<span>&times;</span>
+								    </button>
+								</div>
+								
+							  	<div class="modal-body">  
+							  		<div *ngFor="let container_products of array_object_container_products; let i = index;"> 
+							  			<label for="{{i}}" style="color: orange;">{{i + 1}}.{{container_products.container.name}}</label> 
+							  			<button class="btn btn-primary" id="{{i}}" style="float: right;" (click)="chonKhoXuatHang(i);">Chọn kho</button>
+							  			<table class="table table-striped">
+											<thead>
+												<th>STT</th> 
+												<th>Mã sản phẩm</th>
+												<th>Tên sản phẩm</th>
+												<th>Số lượng nhập</th>
+												<th>Số lượng còn hạn</th>
+												<th>Tình trạng</th>
+											</thead>
+											<tbody>
+												<tr *ngFor="let product of container_products.products; let j = index"> 
+													<td>{{j + 1}}</td>
+													<td>{{product.code}}</td>
+													<td>{{product.name}}</td>
+													<td>{{product.soluongnhap}}</td>
+													<td>{{product.soluongconhan}}</td>
+													<td *ngIf="product.soluongnhap <= product.soluongconhan" style="color: blue;">Đủ</td>
+													<td *ngIf="product.soluongnhap > product.soluongconhan" style="color: red;">Thiếu</td>
+												</tr>
+											</tbody>
+										</table>
+										<br>
+							  		</div> 
+							  	</div>
+							  	 
+							  	<div class="modal-footer">
+							  		<button class="btn btn-default" (click)="closeModal();">Close</button>
+							  	</div> 
+							</ng-template>
+
+							<button class="btn btn-danger" (click)="openModalHuyDonHang(huydon);" style="float: left;" *ngIf="status != 'Đã giao' && status != 'Bị hủy'">Hủy đơn hàng</button>
+							<br>
+
+							<ng-template #huydon> 
+								<div class="modal-header">
+									<h3 class="modal-title pull-left">Lý do hủy đơn hàng</h3>
+								    <button type="button" class="close pull-right" (click)="closeModal();">
+								    	<span>&times;</span>
+								    </button>
+								</div>
+							  	<div class="modal-body">    
+									<div class="form-group">
+										<div class="row" style="margin: 10px 0px 10px 0px;">
+										 	<label for="reason">Lý do:</label>
+										 	<textarea class="form-control" name="reason" id="reason" [(ngModel)]="reason" [ngModelOptions]="{standalone: true}" required="" style="height: 200px;"></textarea>
+										</div> 
+									</div>  
+							  	</div>
+							  	 
+							  	<div class="modal-footer">
+							  		<button class="btn btn-primary" (click)="huyDon();" [disabled]="reason.trim() == ''">Hủy đơn</button>
+							  		<button class="btn btn-default" (click)="closeModal();">Close</button>
+							  	</div>
+							 
+							</ng-template>
+						</div>
+					</div>
+					<br>
+					<div *ngIf="donNhapHang">
+						 <h4><b>THÔNG TIN NHÀ CUNG CẤP</b></h4>
+						<hr>
+						<label>Tên nhà cung cấp: <span>{{name}}</span></label>
+						<br>
+						<br>
+						<label>Mã nhà cung cấp: <span>{{code}}</span></label>
+						<br>
+						<br>
+						<label>Địa chỉ nhà cung cấp: <span>{{address}}</span></label>
+						<br>
+						<br>
+						<label>Số điện thoại nhà cung cấp: <span>{{mobile}}</span></label>
+						<br>
+						<br>
+						<label>Email nhà cung cấp: <span>{{email}}</span></label>
+						 
+					</div>
+					<div *ngIf="donDatHang">
+						 <h4><b>THÔNG TIN SIÊU THỊ</b></h4>
+						<hr>
+						<label>Tên siêu thị: <span>{{name}}</span></label>
+						<br>
+						<br>
+						<label>Mã siêu thị: <span>{{code}}</span></label>
+						<br>
+						<br>
+						<label>Địa chỉ siêu thị: <span>{{address}}</span></label>
+						<br>
+						<br>
+						<label>Số điện thoại siêu thị: <span>{{mobile}}</span></label>
+						<br>
+						<br>
+						<label>Email siêu thị: <span>{{email}}</span></label>
+						<br>
+						<br>  
+					</div>		
+  
+				</form>
+			</div>
+
+			<div class="col-sm-8">
+				<form>
+					<h4><b>DANH SÁCH SẢN PHẨM</b></h4>
+					<br>
+					<table class="table table-striped">
+						<thead>
+							<th>STT</th>
+							<th>Mã sản phẩm</th>
+							<th>Tên sản phẩm</th>
+							<th>Ảnh</th>
+							<th>Số lượng</th>
+							<th>Giá</th>
+							<th>Ngày sản xuất</th>
+							<th>Hạn sử dụng</th> 
+						</thead>
+						<tbody>
+							<tr *ngFor="let product of products; let i = index">
+								<td>{{i + 1}}</td>
+								<td>{{product.code}}</td>
+								<td>{{product.name}}</td>
+								<td><img src="assets/images/{{product.image}}" style="max-height: 50px; max-width: 50px;"></td>
+								<td>{{product.amount}}</td>
+								<td>{{product.price}}</td>
+								<td>{{product.manufacturing_date}}</td>
+								<td>{{product.expiry_date}}</td>
+							</tr>
+						 
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

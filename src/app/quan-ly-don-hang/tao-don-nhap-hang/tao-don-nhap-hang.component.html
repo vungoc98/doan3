@@ -1,0 +1,304 @@
+<app-header-npp name="npp"></app-header-npp>
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp check="isShow3"></app-npp>
+		<div class="col-sm-10">
+			<div style="margin-top: 30px;">
+				<ol class="breadcrumb">
+				  <li><a routerLink="/nhaphanphoi" style="text-decoration: none;">
+				  	<i class="glyphicon glyphicon-home"></i>Trang chủ</a></li> 
+				  <li class="active">Tạo đơn nhập hàng</li> 
+				</ol>		 
+			</div> 
+			<div>
+				<form>
+					<div class="row">
+						<div class="col-sm-4">
+							<h4 style="color: red;"><b>Thông tin nhà cung cấp</b></h4>
+						</div>
+						<div class="col-sm-4 col-sm-offset-4" style="text-align: right;">
+							<button type="button" class="btn btn-primary" (click)="openModal1(template1)">Chọn lại nhà cung cấp</button> 
+							<ng-template #template1>
+								<div class="modal-header">
+									<h3 class="modal-title pull-left">Danh sách nhà cung cấp</h3>
+								    <button type="button" class="close pull-right" (click)="modalRef.hide()">
+								    	<span>&times;</span>
+								    </button>
+								</div>
+							  	<div class="modal-body">
+							  		<table class="table table-striped">
+							  			<thead>
+							  				<tr>
+							  					<th>Action</th>
+								  				<th>Tên nhà cung cấp</th>
+								  				<th>Nhóm sản phẩm cung cấp</th>
+							  				</tr>
+							  			</thead>
+							  			<tbody>
+							  				<tr *ngFor="let pro of display_providers; let i = index;"> 
+							  					<td><input type="radio" class="form-check-input"  name="user_id" mdbInput [value]="pro.id" [(ngModel)]="user_id" id="{{i}}"></td>
+							  					<td><label for="{{i}}">{{pro.name}}</label></td>
+							  					<td><label for="{{i}}">{{pro.product_type}}</label></td> 
+							  				</tr>
+							  			</tbody>
+							  		</table>
+							  		<div style="text-align: right;" *ngIf="display_pages_provider">
+										<ul class="pagination">
+											<li *ngIf="current_page_provider != 1"><a href="javascript:void(0);" (click)="changePage(current_page_provider - 1);">&laquo;</a></li>
+											<!-- Mac dinh la trang dau tien --> 
+											<li *ngFor="let i of range(providers.length)"  [ngClass]="{active: current_page_provider == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
+											<li *ngIf="current_page_provider != total_page_provider"><a href="javascript:void(0);" (click)="changePage(current_page_provider + 1);">&raquo;</a></li>
+										</ul>
+									</div>
+							  		<!-- <div class="form-check" *ngFor="let pro of providers; let i = index;">
+										<input type="radio" class="form-check-input"  name="radios" mdbInput value="{{pro.id}}" [(ngModel)]="radios">
+										<label class="form-check-label" >{{pro.name}} - {{pro.product_type}}</label>
+
+									</div> -->
+									<!-- <div class="form-check">
+										<input type="radio" class="form-check-input" id="ncc2" name="radios" mdbInput value="ncc1" [(ngModel)]="radios" (click)="onClick();">
+										<label class="form-check-label" for="ncc1">Nhà cung cấp 1</label>
+									</div> --> 
+							  	</div>
+							  	<div class="modal-footer">
+							  		<button class="btn btn-primary" (click)="choosed();">Lưu</button>
+							  		<button class="btn btn-default" (click)="modalRef.hide();">Close</button>  		 
+							  	</div>
+							</ng-template>
+							 
+						</div>
+					</div>
+					<hr style="border: 1px solid gray;">
+					<form [formGroup]="formProviderInfo">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label >Tên nhà cung cấp:</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-user"></i> 
+										</span>
+										<input type="text" class="form-control" required="" disabled="" formControlName="name">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Mã nhà cung cấp:</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-user"></i>
+										</span>
+										<input type="text" class="form-control" name="" disabled="" formControlName="code">
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Địa chỉ nhà cung cấp:</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-home"></i>
+										</span>
+										<input type="text" class="form-control" name="" disabled="" formControlName="address">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Số điện thoại nhà cung cấp:</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-phone"></i>
+										</span>
+										<input type="text" class="form-control" name="" disabled="" formControlName="mobile">
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Email nhà cung cấp:</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-envelope"></i>
+										</span>
+										<input type="text" class="form-control" name="" disabled="" formControlName="email">
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+
+					<div class="row" style="margin-top: 20px;">
+						<div class="col-sm-5">
+							<h4 style="color: red;"><b>Danh sách hàng hóa</b></h4>
+						</div>
+						<div class="col-sm-3 col-sm-offset-4" style="text-align: right;">
+							<button type="button" class="btn btn-primary" (click)="openModal2(template2)">Thêm hàng hóa</button> 
+							<ng-template #template2 >
+							 
+								<div class="modal-header">
+									<h3 class="modal-title pull-left">Danh sách hàng hóa của nhà cung cấp</h3>
+								    <button type="button" class="close pull-right" (click)="checkbox
+								    ()">
+								    	<span>&times;</span>
+								    </button>
+								</div>
+							  	<div class="modal-body">  
+									<form (ngSubmit)="onSearch();" [formGroup]="formSearch">
+										<!-- 	Chua cac thanh tim kiem san pham theo ten, ma san pham  -->
+										<div class="form-group" style="margin-top: 20px;">
+											<div class="row">
+												<div class="col-sm-4">
+													<input type="text" placeholder="Nhập tên hàng hóa..." formControlName="name" class="form-control">
+												</div>
+												<div class="col-sm-4">
+													<input type="text" placeholder="Nhập mã hàng hóa..." formControlName="code" class="form-control">
+												</div>
+												<div class="col-sm-4">
+													<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+												</div>
+												 
+											</div> 
+										</div>
+						 				
+						 				<!-- Bang chua danh sach hang hoa da co cua nha cung cap --> 
+										<table class="table table-striped">
+											<thead style="color: blue;">
+												<th>STT</th>
+												<th>Mã sản phẩm</th>
+												<th>Tên sản phẩm</th> 
+												<th>Ảnh</th> 
+												<th>Action</th> 
+											</thead>
+											<tbody>
+												<tr  class="form-check" *ngFor="let product of display_products; let i = index">
+													<td><label for="{{i}}">{{i + 1}}</label></td>
+													<td><label for="{{i}}">{{product.code}}</label></td>
+													<td><label for="{{i}}">{{product.name}}</label></td> 
+													<td><img src="../assets/images/{{product.image}}" style="max-height: 50px; max-width: 50px;"></td>  
+													<td> 
+														<input class="form-check-input" type="checkbox" [(ngModel)]="product.checked" [ngModelOptions]="{standalone: true}" mdbInput id="{{i}}">
+													</td>
+												</tr> 
+											</tbody>
+										</table>  
+										<div style="text-align: right;" *ngIf="display_pages_product">
+											<ul class="pagination">
+												<li [ngClass]="{disabled: current_page_product == 1}"><a href="javascript:void(0);" (click)="changePage1(current_page_product - 1);" *ngIf="current_page_product != 1">&laquo;</a></li>
+												<!-- Mac dinh la trang dau tien --> 
+												<li  *ngFor="let i of range1(products_copy.length)"  [ngClass]="{active: current_page_product == i}"><a href="javascript:void(0);" (click)="changePage1(i);">{{i}}</a></li> 
+												<li [ngClass]="{disabled: current_page_product == total_page_product}"><a href="javascript:void(0);" (click)="changePage1(current_page_product + 1);" *ngIf="current_page_product != total_page_product">&raquo;</a></li>
+											</ul>
+										</div>   
+									</form>
+								<!-- 	<div *ngFor="let s of products">
+										<input type="checkbox" class="form-check-input" [(ngModel)]="s.checked" [ngModelOptions]="{standalone: true}" mdbInput>
+										<label class="form-check-label">{{s.id}}</label>
+									</div> -->
+							  	</div>
+							  	 
+							  	<div class="modal-footer">
+							  		<button class="btn btn-primary" (click)="insertProduct();">Lưu</button>
+							  		<button class="btn btn-default" (click)="checkbox();">Close</button>
+							  	</div>
+							 
+							</ng-template>
+						</div>
+					</div>
+ 					<hr style="border: 1px solid gray;">
+
+ 					<table class="table table-striped">
+						<thead>
+							<th>STT</th>
+							<th>Mã sản phẩm</th>
+							<th>Tên sản phẩm</th>
+							<th>Ảnh</th>
+							<th>Số lượng</th>
+							<th>Giá</th>
+						</thead>
+						<tbody>
+							<tr *ngFor="let imp of products_order; let i = index;">
+								<td>{{i + 1}}</td>
+								<td>{{imp.code}}</td>
+								<td>{{imp.name}}</td>
+								<td><img src="../assets/images/{{imp.image}}" style="max-height: 50px; max-width: 50px;"></td>
+								<td>
+									<input type="text" name="" [(ngModel)]="imp.amount" [ngModelOptions]="{standalone: true}" (change)="changeListner($event, imp.id)" pattern="[0-9]*">
+									<p *ngIf="imp.checkAmount" style="color: red;">Vui lòng điền số lượng sản phẩm</p>
+									<p *ngIf="!(imp.amount > 0) && imp.amount != 0;" style="color: red;">Số lượng sản phẩm không hợp lệ</p> 
+								</td>
+								<td> 
+									<input type="text" name="" [(ngModel)]="imp.prices" [ngModelOptions]="{standalone: true}" (change)="changeListner1($event, imp.id)" pattern="[0-9]*">
+									<p *ngIf="imp.checkPrices" style="color: red;">Vui lòng điền số tiền</p>
+									<p *ngIf="!(imp.prices > 0) && imp.prices != 0;" style="color: red;">Tiền không hợp lệ</p> 
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+
+					<form [formGroup]="formCreateOrder" (ngSubmit)="createOrder(formCreateOrder);">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Tổng số lượng:</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-usd"></i>
+										</span>
+										<input disabled="" class="form-control" type="text" name="" value="{{total_amount}}" formControlName="total_amount">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Tổng tiền:</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-usd"></i>
+										</span>
+										<input disabled="" class="form-control" type="text" name="" value="{{total_price}}" formControlName="total_price">
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Ngày tạo đơn:</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-time"></i>
+										</span>
+										<input type="text" name="" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }" formControlName="ngay_tao">
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Ngày dự kiến giao hàng:</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<i class="glyphicon glyphicon-time"></i>
+										</span>
+										<input type="text" name="" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }" formControlName="ngay_du_kien">
+									</div>
+								</div>
+							</div>
+						</div>
+						<br><br>
+						<button type="submit" class="btn btn-primary">Tạo đơn nhập hàng</button>
+					</form>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

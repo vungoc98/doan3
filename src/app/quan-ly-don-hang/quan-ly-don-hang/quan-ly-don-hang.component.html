@@ -1,0 +1,148 @@
+<app-header-npp name="npp"></app-header-npp>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp check="isShow3"></app-npp>
+		<div class="col-sm-10">
+			<div style="margin-top: 30px;">
+				<ol class="breadcrumb">
+				  <li><a routerLink="/nhaphanphoi" style="text-decoration: none;">
+				  	<i class="glyphicon glyphicon-home"></i>Trang chủ</a></li> 
+				  <li class="active">Danh sách đơn hàng</li> 
+				</ol>		 
+			</div> 
+			<div>
+			  	<tabset [justified]="true">
+			    	<tab heading="Đơn nhập hàng" (select) ="select('nhaphang');">
+				    	<div class="tab">
+					    	<form [formGroup]="formSearch" (ngSubmit)="searchOrder(formSearch);">
+								<!-- Chua cac thanh tim kiem don hang -->
+								<div class="form-group" style="margin-top: 20px;">
+									<div class="row">
+										<div class="col-sm-3">
+											<input type="text" placeholder="Nhập mã đơn hàng..." formControlName="code" class="form-control">
+										</div>
+										<div class="col-sm-3">
+											 <input type="text" placeholder="Nhập tên nhà cung cấp..." formControlName="name" class="form-control"> 
+										</div>
+										<div class="btn-group">
+											<div class="col-sm-3">
+												<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Danh sach san pham hien co trong kho -->
+								<div class="form-group" style="margin-top: 30px;">
+									<table class="table table-striped">
+										<thead>
+											<th>STT</th>
+											<th>Mã đơn hàng</th>
+											<th>Tên nhà cung cấp</th>
+											<th>Tổng số lượng</th>
+											<th>Tổng tiền</th>
+											<th>Ngày tạo đơn</th>
+											<th>Ngày nhập hàng</th> 
+											<th>Trạng thái</th> 
+											<th>Action</th>
+										</thead>
+										<tbody>
+											<tr *ngFor="let import of display_listOrderImport; let i = index">
+												<td>{{i + 1}}</td>
+												<td>{{import.code}}</td>
+												<td>{{import.name}}</td>
+												<td>{{import.amount_total}}</td>
+												<td>{{import.price_total}}</td>
+												<td>{{import.order_date}}</td>
+												<td>{{import.import_date}}</td>  
+												<td>{{import.status}}</td>
+												<td>
+													<button routerLink="/quanlydonhang/nhap_hang_dat_hang/{{'donnhaphang'}}/xemchitiet/{{import.id}}" class="btn btn-primary">Xem chi tiết</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div style="text-align: right;" *ngIf="display_pages">
+										<ul class="pagination">
+											<li *ngIf="current_page != 1"><a href="javascript:void(0);" (click)="changePage(current_page - 1);">&laquo;</a></li>
+											<!-- Mac dinh la trang dau tien --> 
+											<li *ngFor="let i of range(listOrderImport.length)"  [ngClass]="{active: current_page == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
+											<li *ngIf="current_page != total_page"><a href="javascript:void(0);" (click)="changePage(current_page + 1);">&raquo;</a></li>
+										</ul>
+									</div>
+								</div>
+							</form>
+						</div>
+			    	</tab>
+				    <tab heading="Đơn đặt hàng" (select) ="select('dathang');">
+				    	<div class="tab">
+					    	<form [formGroup]="formSearch" (ngSubmit)="searchOrder(formSearch);">
+								<!-- Chua cac thanh tim kiem don hang -->
+								<div class="form-group" style="margin-top: 20px;">
+									<div class="row">
+										<div class="col-sm-3">
+											<input class="form-control" type="text" placeholder="Nhập mã đơn hàng..." formControlName="code">
+										</div>
+										<div class="col-sm-3">
+											 <input class="form-control" type="text" placeholder="Nhập tên siêu thị..." formControlName="name"> 
+										</div>
+										<div class="btn-group">
+											<div class="col-sm-3">
+												<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Danh sach san pham hien co trong kho -->
+								<div class="form-group" style="margin-top: 30px;">
+									<table class="table table-striped">
+										<thead>
+											<th>STT</th>
+											<th>Mã đơn hàng</th>
+											<th>Tên siêu thị</th>
+											<th>Số lượng</th>
+											<th>Tổng tiền</th>
+											<th>Ngày tạo đơn</th>
+											<th>Ngày xuất hàng</th>
+											<th>Ngày cập nhật</th>
+											<th>Trạng thái</th>
+											<th>Ghi chú</th>
+											<th>Action</th>
+										</thead>
+										<tbody>
+												<tr *ngFor="let export of display_listOrderExport; let i = index">
+												<td>{{i + 1}}</td>
+												<td>{{export.code}}</td>
+												<td>{{export.name}}</td>
+												<td>{{export.amount_total}}</td>
+												<td>{{export.price_total}}</td> 
+												<td>{{export.order_date}}</td> 
+												<td>{{export.export_date}}</td> 
+												<td>{{export.update_date}}</td>
+												<td>{{export.status}} </td> 
+												<td>{{export.reason}}</td>
+												<td> 
+													<button class="btn btn-primary" routerLink="/quanlydonhang/nhap_hang_dat_hang/{{'dondathang'}}/xemchitiet/{{export.id}}">Xem chi tiết</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div style="text-align: right;" *ngIf="display_pages">
+										<ul class="pagination">
+											<li *ngIf="current_page != 1"><a href="javascript:void(0);" (click)="changePage(current_page - 1);">&laquo;</a></li>
+											<!-- Mac dinh la trang dau tien --> 
+											<li *ngFor="let i of range(listOrderExport.length)"  [ngClass]="{active: current_page == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
+											<li *ngIf="current_page != total_page"><a href="javascript:void(0);" (click)="changePage(current_page + 1);">&raquo;</a></li>
+										</ul>
+									</div>
+								</div>
+							</form>
+						</div>
+				    </tab>
+			  	</tabset>
+			</div> 
+		</div>
+	</div>
+</div>

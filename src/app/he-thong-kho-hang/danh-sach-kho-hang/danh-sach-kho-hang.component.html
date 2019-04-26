@@ -1,0 +1,75 @@
+<app-header-npp name="npp"></app-header-npp>
+ 
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-npp check="isShow2"></app-npp>
+		<div class="col-sm-10">
+			<div style="margin-top: 30px;">
+				<ol class="breadcrumb">
+				  <li><a routerLink="/nhaphanphoi" style="text-decoration: none;">
+				  	<i class="glyphicon glyphicon-home"></i>Trang chủ</a></li> 
+				  <li class="active">Danh sách kho hàng</li> 
+				</ol>		 
+			</div>   
+			<!-- Chua cac thanh tim kiem kho hang theo ten, ma kho hang -->
+			<form [formGroup]="formSearchContainer" (ngSubmit)="searchContainer(formSearchContainer);">
+				<div class="form-group" style="margin-top: 20px;">
+					<div class="row">
+						<div class="col-sm-3">
+							<input class="form-control" type="text" formControlName="name" placeholder="Nhập tên kho hàng...">	
+						</div>
+						<div class="col-sm-3">
+							<input class="form-control" type="text" formControlName="code" placeholder="Nhập mã kho hàng...">
+						</div>
+						<div class="btn-group">
+							<div class="col-sm-3">
+								<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+							</div>
+						</div>
+					</div>
+					 
+				</div> 
+
+				<!-- Hien thi danh sach kho hang -->
+				<div class="form-group" style="margin-top: 30px;"> 
+					<table class="table table-striped">
+						<thead>
+							<th>STT</th>
+							<th>Mã kho hàng</th>
+							<th>Tên kho hàng</th>
+							<th>Địa chỉ</th>
+							<th>Số điện thoại</th> 
+							<th>Trạng thái</th>
+							<th>Ngày tạo</th>
+							<th>Ngày cập nhật</th>
+							<th>Action</th>
+						</thead>
+						<tbody>
+							<tr *ngFor="let container of display_containers; let i = index">
+								<td>{{i + 1}}</td>
+								<td>{{container.code}}</td>
+								<td>{{container.name}}</td>
+								<td>{{container.address}}</td>
+								<td>{{container.mobile}}</td>
+								<td>{{container.dele}}</td>
+								<td>{{container.create_date}}</td>
+								<td>{{container.update_date}}</td>
+								<td>
+									<a routerLink="/hethongkhohang/danhsachkhohang/chitietkhohang/{{container.id}}" class="btn btn-primary">Chi tiết kho hàng</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div style="text-align: right;" *ngIf="display_pages">
+						<ul class="pagination">
+							<li *ngIf="current_page != 1"><a href="javascript:void(0);" (click)="changePage(current_page - 1);">&laquo;</a></li>
+							<!-- Mac dinh la trang dau tien --> 
+							<li *ngFor="let i of range(containers.length)"  [ngClass]="{active: current_page == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
+							<li *ngIf="current_page != total_page"><a href="javascript:void(0);" (click)="changePage(current_page + 1);">&raquo;</a></li>
+						</ul>
+					</div>   
+				</div>
+			</form> 
+		</div>
+	</div>
+</div>

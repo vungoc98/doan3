@@ -1,0 +1,35 @@
+.search {
+	height: 33px; 
+	width: 250px;
+} 
+
+th, tbody {
+	text-align: center;
+}
+table tbody { 
+	display:block; 
+	max-height:450px; 
+	overflow-y:scroll; 
+}
+table thead, table tbody tr { 
+	display:table; 
+	width:100%; 
+	table-layout:fixed; 
+}
+
+form {
+	border:1px solid gray;
+	padding: 10px;
+	margin-top: 40px;
+}
+
+ 
+
+h2 {
+	text-align: center;
+	color: red;
+}
+
+.tab {
+	margin-top: 50px;
+}

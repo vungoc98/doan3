@@ -1,0 +1,29 @@
+#menu a:hover {
+	background-color: green;
+}
+ 
+#menu a {
+	background-color: #2F4F4F;
+	color: white;
+}
+ 
+#menu li {
+	margin-top: 20px;
+}
+
+#menu div {
+	display: auto;
+	overflow-y: auto;
+	position: inherit;
+	background-color: #2F4F4F;
+}
+
+#menu ul {
+	min-height:1200px;
+	overflow-y:auto;
+	background-color: #2F4F4F; 
+	display: auto;
+	list-style: none; 
+	 
+}
+ 

@@ -1,0 +1,59 @@
+ <div class="col-sm-2" style="background-color: #2F4F4F;  display: auto; margin-top: 0px;" id="menu">
+	<ul class="nav flex-column" id="menu">
+		
+		<li class="active">
+			<a routerLink="/nhaphanphoi" (click)="onClick();"><span class="glyphicon glyphicon-dashboard" data-parent="#menu" aria-multiselectable="true"></span>&nbsp;&nbsp; Dashboard</a>
+			    
+		</li>
+		<li class="">
+			<a href="javascript:void(0);" (click)="onClick1();">
+				<span class="glyphicon glyphicon-list-alt" aria-multiselectable="true"></span>
+				&nbsp;&nbsp; Hệ thống sản phẩm
+			</a>
+	        <div *ngIf="isShow1">
+	        	<a routerLink="/hethongsanpham/taomoisanpham" class="list-group-item" routerLinkActive="active">Tạo mới</a>
+	        	<nav>
+	            	<a routerLink="/hethongsanpham/danhsachsanpham" class="list-group-item" routerLinkActive="active">Danh sách</a>
+	            </nav>
+	            <a routerLink="/hethongsanpham/hethongnhomsanpham" class="list-group-item" routerLinkActive="active" >Hệ thống nhóm sản phẩm</a>
+	        </div> 
+		</li>
+ 
+		<li>
+			<a href="javascript:void(0);" (click)="onClick2();">
+				<span class="glyphicon glyphicon-list-alt"></span>
+				&nbsp;&nbsp; Hệ thống kho hàng 
+			</a>
+	        <div *ngIf="isShow2">
+	        	<a routerLink="/hethongkhohang/taomoikhohang" class="list-group-item" routerLinkActive="active" >Tạo mới</a>
+	            <a routerLink="/hethongkhohang/danhsachkhohang" class="list-group-item" routerLinkActive="active" >Danh sách</a>
+	            <a routerLink="/hethongkhohang/thongke" class="list-group-item" routerLinkActive="active" >Thống kê</a>
+	        </div>
+		</li>
+
+		<li>
+			<a href="javascript:void(0);" (click)="onClick3();">
+				<span class="glyphicon glyphicon-shopping-cart"></span>
+				&nbsp;&nbsp; Quản lý đơn hàng 
+			</a> 
+			<div *ngIf="isShow3">
+	        	<a routerLink="/quanlydonhang/taodonnhaphang" class="list-group-item" routerLinkActive="active" >Tạo đơn nhập hàng</a>
+	            <a routerLink="/quanlydonhang/nhap_hang_dat_hang" class="list-group-item" routerLinkActive="active" >Quản lý đơn hàng</a>
+	        </div>
+		</li>
+
+		<li>
+			<a href="javascript:void(0);" (click)="onClick4();">
+				<span class="glyphicon glyphicon-user"></span>
+				&nbsp;&nbsp; Quản lý người dùng
+			</a> 
+			<div *ngIf="isShow4">
+	        	 <a routerLink="/quanlynguoidung" routerLinkActive="active" class="list-group-item">Danh sách người dùng</a> 
+	        </div>
+			 
+		 
+		</li> 
+
+	</ul>
+</div>
+ 

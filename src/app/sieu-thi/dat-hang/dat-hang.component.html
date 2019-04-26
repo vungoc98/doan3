@@ -1,0 +1,158 @@
+<app-header-npp name="sieuthi"></app-header-npp>
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-sieu-thi></app-sieu-thi>
+		<div class="col-sm-10"> 
+			<div style="margin-top: 30px;">
+				<ol class="breadcrumb">
+				  <li><a routerLink="/sieuthi" style="text-decoration: none;">
+				  	<i class="glyphicon glyphicon-home"></i>Trang chủ</a></li> 
+				  <li class="active">Tạo đơn đặt hàng</li> 
+				</ol>		 
+			</div>   
+			<div>
+				<form [formGroup]="formCreateOrder" (ngSubmit)="createOrder(formCreateOrder);">
+					<div class="row">
+						<div class="col-sm-5">
+							<h4 style="color: red;"><b>Danh sách hàng hóa</b></h4>
+						</div>
+						<div class="col-sm-3 col-sm-offset-4" style="text-align: right;">
+							<button type="button" class="btn btn-primary" (click)="openModal(template)">Thêm hàng hóa</button> 
+							<ng-template #template>
+							 
+								<div class="modal-header">
+									<h3 class="modal-title pull-left">Danh sách hàng hóa của nhà cung cấp</h3>
+								    <button type="button" class="close pull-right" (click)="checkbox();">
+								    	<span>&times;</span>
+								    </button>
+								</div>
+							  	<div class="modal-body">
+									<form (ngSubmit)="onSearch(formSearch);" [formGroup]="formSearch">
+										<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
+										<div class="form-group" style="margin-top: 20px;">
+											<div class="row">
+												<div class="col-sm-3">
+													<input type="text" placeholder="Nhập tên hàng hóa..." formControlName="name" class="form-control">
+												</div>
+												<div class="col-sm-3">
+													<input type="text" placeholder="Nhập mã hàng hóa..." formControlName="code" class="form-control">
+												</div>
+												<div class="col-sm-3">
+													<select class="form-control" required=""  [(ngModel)]="selectedType" [ngModelOptions]="{standalone: true}">
+														<option value="" disabled selected hidden>Chọn nhóm sản phẩm</option>
+														<option *ngFor="let type of product_type" value="{{type.name}}">{{type.name}}</option> 
+														<option value="">Không chọn nhóm</option> 
+													</select>
+												</div>
+												<div class="col-sm-3">
+													<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+												</div>
+												 
+											</div> 
+										</div>
+						 				
+						 				<!-- Bang chua danh sach hang hoa da co cua nha cung cap -->
+										<div class="form-group" style="margin-top: 30px;">
+											<table class="table table-striped">
+												<thead>
+													<th>STT</th>
+													<th>Mã sản phẩm</th>
+													<th>Tên sản phẩm</th> 
+													<th>Ảnh</th>
+													<th>Giá</th>
+													<th>Action</th> 
+												</thead>
+												<tbody>
+													<tr  class="form-check" *ngFor="let product of display_products; let i = index">
+														<td>{{i + 1}}</td>
+														<td>{{product.code}}</td>
+														<td>{{product.name}}</td> 
+														<td><img src="../assets/images/{{product.image}}" style="max-height: 50px; max-width: 50px;"></td> 
+														<td>{{product.price}}</td>
+														<td> 
+															<input class="form-check-input" type="checkbox" [(ngModel)]="product.checked" [ngModelOptions]="{standalone: true}" mdbInput>
+														</td>
+													</tr> 
+												</tbody>
+											</table>  
+										</div>
+										<div style="text-align: right;" *ngIf="display_pages">
+											<ul class="pagination">
+												<li [ngClass]="{disabled: current_page == 1}"><a href="javascript:void(0);" (click)="changePage(current_page - 1);" *ngIf="current_page != 1">&laquo;</a></li>
+												<!-- Mac dinh la trang dau tien --> 
+												<li  *ngFor="let i of range(products_copy.length)"  [ngClass]="{active: current_page == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
+												<li [ngClass]="{disabled: current_page == total_page}"><a href="javascript:void(0);" (click)="changePage(current_page + 1);" *ngIf="current_page != total_page">&raquo;</a></li>
+											</ul>
+										</div>   
+									</form> 
+							  	</div>
+							  	 
+							  	<div class="modal-footer">
+							  		<button class="btn btn-primary" (click)="insertProduct();">Lưu</button>
+							  		<button class="btn btn-default" (click)="checkbox();">Close</button>  		 
+							  	</div>
+							 
+							</ng-template>
+						</div>
+					</div>
+ 					<hr style="border: 1px solid gray;">
+
+ 					<table class="table table-striped">
+						<thead>
+							<th>STT</th>
+							<th>Mã sản phẩm</th>
+							<th>Tên sản phẩm</th>
+							<th>Mô tả</th>
+							<th>Ảnh</th>
+							<th>Số lượng</th>
+							<th>Giá</th>
+						</thead>
+						<tbody>
+							<tr *ngFor="let product of products_order; let i = index;">
+								<td>{{i + 1}}</td>
+								<td>{{product.code}}</td>
+								<td>{{product.name}}</td>
+								<td>{{product.description}}</td>
+								<td><img src="assets/images/{{product.image}}" style="width: 50px; height: 50px;"></td>
+								<td>
+									<input type="text" [(ngModel)]="product.amount" (change)="changeListner($event, product.id)" pattern="[0-9]*" required="" [ngModelOptions]="{standalone: true}">
+									<p *ngIf="product.checkAmount" style="color: red;">Vui lòng điền số lượng sản phẩm</p>
+									<p *ngIf="!(product.amount > 0) && product.amount != 0;" style="color: red;">Số lượng sản phẩm không hợp lệ</p> 
+								</td>
+								<td>
+									<input type="text" name="" value="{{product.price * product.amount}}" disabled="">
+								</td>
+							</tr>
+						</tbody>
+					</table> 
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Tổng số lượng:</label>
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="glyphicon glyphicon-usd"></i>
+									</span>
+									<input disabled="" class="form-control" type="text" name="" value="{{total_amount}}" formControlName="total_amount">
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label>Tổng tiền:</label>
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="glyphicon glyphicon-usd"></i>
+									</span>
+									<input disabled="" class="form-control" type="text" name="" value="{{total_price}}" formControlName="total_price">
+								</div>
+							</div>
+						</div>
+					</div> 
+					<br><br>
+					<button type="submit" class="btn btn-primary" [disabled]="formCreateOrder.invalid">Tạo đơn hàng</button> 
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

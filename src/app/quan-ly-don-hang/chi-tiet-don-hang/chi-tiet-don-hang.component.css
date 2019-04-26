@@ -1,0 +1,33 @@
+form {
+	border:1px solid gray;
+	padding: 10px;  
+}
+
+th, tbody {
+	text-align: center;
+}
+table tbody { 
+	display:block; 
+	max-height:450px; 
+	overflow-y:scroll; 
+}
+table thead, table tbody tr { 
+	display:table; 
+	width:100%; 
+	table-layout:fixed; 
+} 
+
+td {
+	line-height: 100px;
+}
+span {
+	color: blue;
+	font-size: 14px;
+}
+#xuathang {
+	width: 1200px;
+}
+
+hr {
+	border: 1px black solid;
+}

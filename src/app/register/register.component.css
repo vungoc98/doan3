@@ -1,0 +1,23 @@
+body {
+	width: 500px;
+	/*width: 500px;
+	height: 1050px;*/
+	border: 1px solid;
+	margin: 10px;
+
+}
+.register {
+	margin: 10px;
+}
+#dangky {
+	text-align: center;
+}
+.register .dau {
+	color: red;
+}
+ 
+.fillLine {
+	display: inline-block;
+	width: 155px;
+	border-bottom: 1px solid black;
+}

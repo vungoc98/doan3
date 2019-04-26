@@ -1,0 +1,31 @@
+form {
+	border:1px solid gray;
+	padding: 10px; 
+	margin-top: 40px;
+}
+
+hr {
+	border: 1px solid black;
+}
+
+.search {
+	height: 33px; 
+	width: 250px;
+}
+
+th, tbody {
+	text-align: center;
+}
+
+h2 {
+	text-align: center;
+	color: red;
+}
+
+.tab {
+	margin-top: 50px;
+}
+
+.dau {
+	color: red;
+}

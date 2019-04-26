@@ -1,0 +1,73 @@
+<app-header-npp name="ncc"></app-header-npp>
+<!-- Chua menu cua nha phan phoi -->
+<div class="container-fluid" style="height: 100vh;">
+	<div class="row">
+		<app-sign-in></app-sign-in>
+		<div class="col-sm-10" style="margin-top: 30px;">
+			<ol class="breadcrumb">
+				  <li><a routerLink="/nhacungcap" style="text-decoration: none;">
+				  	<i class="glyphicon glyphicon-home"></i>Trang chủ</a></li>  
+				  <li class="active">Danh sách đơn hàng</li> 
+			</ol>	
+			<form (ngSubmit)="onSearch(formSearch);" [formGroup]="formSearch">
+				<!-- Chua cac thanh tim kiem san pham theo ten, ma san pham -->
+				<div class="form-group" style="margin-top: 20px;">
+					<div class="row">
+						<div class="col-sm-3">
+							<input type="text" placeholder="Nhập mã đơn hàng..." class="form-control" formControlName="code">
+						</div>
+						 
+						<div class="col-sm-3">
+							<select class="form-control" required=""  [(ngModel)]="selectedType" [ngModelOptions]="{standalone: true}">
+								<option value="" disabled selected hidden>Chọn trạng thái đơn hàng</option>
+								<option *ngFor="let type of order_type" value="{{type}}">{{type}}</option>  
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<button type="submit" class=" btn btn-primary" name="timkiem"><span class="glyphicon glyphicon-search"></span>Tìm kiếm</button>
+						</div>
+						 
+					</div> 
+				</div>
+ 				
+ 				<!-- Bang chua danh sach cac don hang cua nha cung cap -->
+				<div class="form-group" style="margin-top: 30px;">
+					<table class="table table-striped">
+						<thead>
+							<th>STT</th>
+							<th>Mã đơn hàng</th>
+							<th>Tổng số lượng</th>
+							<th>Tổng tiền</th>
+							<th>Ngày tạo đơn</th>
+							<th>Ngày xuât hàng</th>
+							<th>Trạng thái</th>
+							<th>Action</th>
+						</thead>
+						<tbody>
+							<tr *ngFor="let order of display_orders; let i = index;">
+								<td>{{i + 1}}</td>
+								<td>{{order.code}}</td>
+								<td>{{order.amount_total}}</td>
+								<td>{{order.price_total}}</td>
+								<td>{{order.order_date}}</td>
+								<td>{{order.import_date}}</td>
+								<td>{{order.status}}</td>
+								<td>
+									<button class="btn btn-primary" routerLink="/nhacungcap/quanlydonhang/xemchitiet/{{order.id}}">Xem chi tiết</button>
+								</td>
+							</tr>  
+						</tbody>
+					</table>
+					<div style="text-align: right;" *ngIf="display_pages">
+						<ul class="pagination">
+							<li *ngIf="current_page != 1"><a href="javascript:void(0);" (click)="changePage(current_page - 1);">&laquo;</a></li>
+							<!-- Mac dinh la trang dau tien --> 
+							<li *ngFor="let i of range(orders.length)"  [ngClass]="{active: current_page == i}"><a href="javascript:void(0);" (click)="changePage(i);">{{i}}</a></li> 
+							<li *ngIf="current_page != total_page"><a href="javascript:void(0);" (click)="changePage(current_page + 1);">&raquo;</a></li>
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Login</title>
+</head>
+<body style="margin: 50px auto;">
+	<div class="container-fluid">
+		<form class="login" (ngSubmit)="onSubmit();" [formGroup]="formSignIn">
+			<h2 id="dangnhap"><b>Đăng nhập</b></h2>
+			<br><br>
+			<div>
+				<label>Tên tài khoản <span class="dau">*</span></label>
+				<div class="input-group">
+			    	<span class="input-group-addon">
+			        	<i class="glyphicon glyphicon-user"></i>
+			    	</span>
+			    <input type="text" class="form-control" formControlName="name">
+			    </div>
+			</div>
+			<br>
+			<div>
+				<label>Mật khẩu <span class="dau">*</span></label>
+				<div class="input-group">
+					<span class="input-group-addon">
+						<i class="glyphicon glyphicon-lock"></i>
+					</span>
+					<input type="password" class="form-control" formControlName="password">
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<a class="col-sm-4 col-sm-offset-8">Quên mật khẩu?</a>
+			</div>
+			<br><br>
+			<div>
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Đăng nhập</button>
+			</div>
+			<br>
+			<div class="fillLine"></div>  Bạn chưa có tài khoản!  <div class="fillLine"></div>
+			<br><br>
+			<button type="button" routerLink="/register" class="btn btn-light btn-lg btn-block">Đăng ký</button>
+		</form>
+	</div>
+</body>
+</html>
